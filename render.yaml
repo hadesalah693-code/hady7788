@@ -1,0 +1,110 @@
+services:
+  - type: web
+    name: aqari
+    runtime: docker
+    region: frankfurt
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /up
+    autoDeploy: true
+
+    envVars:
+      # ---------------- التطبيق ----------------
+      - key: APP_NAME
+        value: "الإمداد العقارية"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      # APP_URL: لا تُضبط هنا؛ يُشتق تلقائيًا من RENDER_EXTERNAL_URL داخل entrypoint.
+      # أضِفها يدويًا من لوحة Render فقط إذا استخدمت دومينًا مخصصًا.
+      - key: APP_KEY
+        sync: false
+      - key: APP_LOCALE
+        value: ar
+      - key: APP_FALLBACK_LOCALE
+        value: ar
+      - key: APP_FAKER_LOCALE
+        value: ar_EG
+      - key: APP_TIMEZONE
+        value: Africa/Cairo
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: warning
+
+      # ---------------- قاعدة البيانات (Neon) ----------------
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_SSLMODE
+        value: require
+
+      # ---------------- الجلسات والكاش والطوابير ----------------
+      - key: SESSION_DRIVER
+        value: database
+      - key: SESSION_SECURE_COOKIE
+        value: "true"
+      - key: SESSION_ENCRYPT
+        value: "true"
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+
+      # ---------------- التخزين ----------------
+      # الصور على S3-Compatible، والملفات المؤقتة تبقى محلية (مؤقتة بطبيعتها)
+      - key: FILESYSTEM_DISK
+        value: local
+      - key: PROPERTY_IMAGE_DRIVER
+        value: s3
+      - key: PUBLIC_DISK_DRIVER
+        value: s3
+
+      # على خطة Free (512MB) نخفض سقف البكسلات لحماية الذاكرة.
+      # ارفعها إلى 36000000 بعد الترقية إلى خطة بذاكرة 2GB.
+      - key: PROPERTY_IMAGE_MAX_PIXELS
+        value: "12000000"
+
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        # Cloudflare R2 يستخدم auto، وAWS S3 يحتاج المنطقة الفعلية
+        value: auto
+      - key: AWS_BUCKET
+        sync: false
+      - key: AWS_PUBLIC_BUCKET
+        sync: false
+      - key: AWS_PUBLIC_URL
+        sync: false
+      - key: AWS_ENDPOINT
+        sync: false
+      - key: AWS_USE_PATH_STYLE_ENDPOINT
+        value: "true"
+
+      # ---------------- المدير الأول ----------------
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+
+      # خطة Free لا تدعم Pre-Deploy Command، لذلك تُشغَّل الترحيلات عند الإقلاع.
+      # بعد أول نشر ناجح يمكن جعلها false.
+      - key: RUN_MIGRATIONS
+        value: "true"
+
+      # اجعلها true في أول نشر فقط لإنشاء حساب المدير، ثم أعِدها إلى false.
+      - key: RUN_ADMIN_SEEDER
+        value: "false"

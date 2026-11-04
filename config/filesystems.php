@@ -38,7 +38,26 @@ return [
             'report' => false,
         ],
 
-        'public' => [
+        /*
+         * Public disk for avatars and company logos.
+         *
+         * Set PUBLIC_DISK_DRIVER=s3 to move these files to an S3-compatible
+         * bucket (Cloudflare R2, AWS S3, Backblaze B2...). The bucket must be
+         * publicly readable, and AWS_PUBLIC_URL must point to its public URL.
+         */
+        'public' => env('PUBLIC_DISK_DRIVER', 'local') === 's3' ? [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_PUBLIC_BUCKET') ?: env('AWS_BUCKET'),
+            'url' => env('AWS_PUBLIC_URL') ?: env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ] : [
             'driver' => 'local',
             'root' => storage_path('app/public'),
             'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
@@ -51,8 +70,23 @@ return [
          * Private disk for user-uploaded property images. It lives outside the
          * public web root and is only reachable through the guarded
          * PropertyImageController route.
+         *
+         * Set PROPERTY_IMAGE_DRIVER=s3 to store the files on a private
+         * S3-compatible bucket. The disk name stays "property-images" so the
+         * `disk` column in the database does not need to change.
          */
-        'property-images' => [
+        'property-images' => env('PROPERTY_IMAGE_DRIVER', 'local') === 's3' ? [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ] : [
             'driver' => 'local',
             'root' => storage_path('app/property-images'),
             'serve' => false,

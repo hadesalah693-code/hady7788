@@ -50,7 +50,7 @@
     <div class="card-surface p-4">
         <div class="flex items-center gap-3">
             @if ($user->avatar_path)
-                <img src="{{ asset('storage/'.$user->avatar_path) }}" alt="" class="h-12 w-12 rounded-xl object-cover ring-1 ring-slate-200">
+                <img src="{{ Storage::disk('public')->url($user->avatar_path) }}" alt="" class="h-12 w-12 rounded-xl object-cover ring-1 ring-slate-200">
             @else
                 <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-lg font-extrabold text-brand-700 ring-1 ring-brand-100">
                     {{ mb_substr($user->name, 0, 1) }}

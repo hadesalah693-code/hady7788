@@ -56,7 +56,7 @@
                 <details class="group relative" data-menu>
                     <summary class="flex cursor-pointer list-none items-center gap-2 rounded-xl border border-slate-200 bg-white py-1.5 pe-3 ps-1.5 text-sm font-bold text-slate-700 transition hover:border-brand-300 hover:text-brand-700 [&::-webkit-details-marker]:hidden">
                         @if ($user->avatar_path)
-                            <img src="{{ asset('storage/'.$user->avatar_path) }}" alt="" class="h-8 w-8 rounded-lg object-cover">
+                            <img src="{{ Storage::disk('public')->url($user->avatar_path) }}" alt="" class="h-8 w-8 rounded-lg object-cover">
                         @else
                             <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50 text-brand-700">
                                 <x-heroicon-o-user class="h-4.5 w-4.5" />

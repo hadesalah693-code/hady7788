@@ -14,6 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Render (and most PaaS providers) terminate TLS at their proxy and
+        // forward the original scheme in X-Forwarded-Proto.
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'account.type' => EnsureAccountType::class,
         ]);
