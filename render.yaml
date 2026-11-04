@@ -67,32 +67,9 @@ services:
       - key: FILESYSTEM_DISK
         value: local
       - key: PROPERTY_IMAGE_DRIVER
-        value: s3
+        value: local
       - key: PUBLIC_DISK_DRIVER
-        value: s3
-
-      # على خطة Free (512MB) نخفض سقف البكسلات لحماية الذاكرة.
-      # ارفعها إلى 36000000 بعد الترقية إلى خطة بذاكرة 2GB.
-      - key: PROPERTY_IMAGE_MAX_PIXELS
-        value: "12000000"
-
-      - key: AWS_ACCESS_KEY_ID
-        sync: false
-      - key: AWS_SECRET_ACCESS_KEY
-        sync: false
-      - key: AWS_DEFAULT_REGION
-        # Cloudflare R2 يستخدم auto، وAWS S3 يحتاج المنطقة الفعلية
-        value: auto
-      - key: AWS_BUCKET
-        sync: false
-      - key: AWS_PUBLIC_BUCKET
-        sync: false
-      - key: AWS_PUBLIC_URL
-        sync: false
-      - key: AWS_ENDPOINT
-        sync: false
-      - key: AWS_USE_PATH_STYLE_ENDPOINT
-        value: "true"
+        value: local
 
       # ---------------- المدير الأول ----------------
       - key: ADMIN_EMAIL
@@ -101,9 +78,9 @@ services:
         sync: false
 
       # خطة Free لا تدعم Pre-Deploy Command، لذلك تُشغَّل الترحيلات عند الإقلاع.
-      # بعد أول نشر ناجح يمكن جعلها false.
+# (تم تعطيلها مؤقتاً لحين استيراد قاعدة Neon يدوياً).
       - key: RUN_MIGRATIONS
-        value: "true"
+        value: "false"
 
       # اجعلها true في أول نشر فقط لإنشاء حساب المدير، ثم أعِدها إلى false.
       - key: RUN_ADMIN_SEEDER
