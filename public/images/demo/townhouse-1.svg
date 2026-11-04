@@ -1,0 +1,49 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" role="img" aria-label="Al Emdad Real Estate property illustration">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffedd5"/>
+      <stop offset="1" stop-color="#fefce8"/>
+    </linearGradient>
+    <linearGradient id="tower" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d97706"/>
+      <stop offset="1" stop-color="#92400e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="985" cy="150" r="78" fill="#f59e0b" opacity="0.85"/>
+  <g fill="#92400e" opacity="0.16">
+    <rect x="70" y="380" width="120" height="230" rx="10"/>
+    <rect x="215" y="320" width="90" height="290" rx="10"/>
+    <rect x="930" y="340" width="120" height="270" rx="10"/>
+    <rect x="1070" y="400" width="90" height="210" rx="10"/>
+  </g>
+  <g>
+    <rect x="300" y="255" width="350" height="350" rx="20" fill="#92400e"/>
+    <rect x="335" y="300" width="80" height="62" rx="8" fill="#fef3c7"/>
+    <rect x="435" y="300" width="80" height="62" rx="8" fill="#fef3c7"/>
+    <rect x="535" y="300" width="80" height="62" rx="8" fill="#fef3c7"/>
+    <rect x="335" y="390" width="80" height="62" rx="8" fill="#fef3c7"/>
+    <rect x="435" y="390" width="80" height="62" rx="8" fill="#fef3c7"/>
+    <rect x="535" y="390" width="80" height="62" rx="8" fill="#fef3c7"/>
+    <rect x="420" y="500" width="110" height="105" rx="10" fill="#fef3c7"/>
+  </g>
+  <g>
+    <rect x="675" y="165" width="245" height="440" rx="22" fill="url(#tower)"/>
+    <rect x="710" y="215" width="70" height="52" rx="7" fill="#fef3c7"/>
+    <rect x="810" y="215" width="70" height="52" rx="7" fill="#fef3c7"/>
+    <rect x="710" y="295" width="70" height="52" rx="7" fill="#fef3c7"/>
+    <rect x="810" y="295" width="70" height="52" rx="7" fill="#fef3c7"/>
+    <rect x="710" y="375" width="70" height="52" rx="7" fill="#fef3c7"/>
+    <rect x="810" y="375" width="70" height="52" rx="7" fill="#fef3c7"/>
+    <rect x="760" y="500" width="75" height="105" rx="8" fill="#fef3c7"/>
+  </g>
+  <g fill="#92400e" opacity="0.9">
+    <rect x="178" y="475" width="15" height="130" rx="7"/>
+    <path d="M186 480 C135 440 105 462 92 492 C130 474 160 480 186 500 Z"/>
+    <path d="M186 480 C232 435 265 455 282 486 C246 470 214 478 186 500 Z"/>
+    <path d="M186 505 C145 492 122 510 114 535 C145 518 166 520 186 532 Z"/>
+    <path d="M186 505 C225 490 250 505 260 530 C230 514 208 518 186 532 Z"/>
+  </g>
+  <rect y="605" width="1200" height="195" fill="#92400e" opacity="0.30"/>
+  <path d="M0 620 C240 585 420 650 640 620 C860 590 1040 640 1200 610 L1200 800 L0 800 Z" fill="#92400e" opacity="0.22"/>
+</svg>
