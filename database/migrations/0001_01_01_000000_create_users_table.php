@@ -7,6 +7,17 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
+     * Disable transaction wrapping for this migration.
+     *
+     * Neon's serverless PostgreSQL (via Render) can abort multi-statement
+     * transactions mid-flight (e.g. on cold-start or pooler interaction),
+     * which surfaces as SQLSTATE[25P02]. Running each statement independently
+     * ensures the tables are created even if a later statement fails, and
+     * produces a clearer error for diagnosis.
+     */
+    public $withinTransaction = false;
+
+    /**
      * Run the migrations.
      */
     public function up(): void

@@ -45,7 +45,12 @@ php artisan storage:link --force >/dev/null 2>&1 || true
 # ترحيلات اختيارية: تُشغَّل عند الإقلاع إذا كان RUN_MIGRATIONS=true
 # (خطة Render المجانية لا تدعم Pre-Deploy Command، لذلك هذا هو المسار الافتراضي)
 if [ "${RUN_MIGRATIONS:-false}" = "true" ]; then
-    php artisan migrate --force
+    echo ">>> Running database migrations..."
+    if ! php artisan migrate --force --no-interaction; then
+        echo "!!! MIGRATION FAILED — aborting startup" >&2
+        exit 1
+    fi
+    echo ">>> Migrations completed successfully."
 fi
 
 # إنشاء/تحديث حساب المدير مرة واحدة فقط.

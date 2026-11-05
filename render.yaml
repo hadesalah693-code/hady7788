@@ -63,13 +63,40 @@ services:
         value: database
 
       # ---------------- التخزين ----------------
-      # الصور على S3-Compatible، والملفات المؤقتة تبقى محلية (مؤقتة بطبيعتها)
+      # الصور على S3-Compatible (Cloudflare R2 / AWS S3 / Backblaze B2) للتخزين الدائم.
+      # التخزين المحلي (local) مؤقت فقط ولا يتحمل إعادة النشر.
       - key: FILESYSTEM_DISK
         value: local
       - key: PROPERTY_IMAGE_DRIVER
-        value: local
+        value: s3
       - key: PUBLIC_DISK_DRIVER
-        value: local
+        value: s3
+
+      # على خطة Free (512MB) نخفض سقف البكسلات لحماية الذاكرة.
+      # ارفعها إلى 36000000 بعد الترقية إلى خطة بذاكرة 2GB.
+      - key: PROPERTY_IMAGE_MAX_PIXELS
+        value: "12000000"
+
+      # ---------------- التخزين S3-Compatible ----------------
+      # Cloudflare R2 / AWS S3 / Backblaze B2 — للتخزين الدائم.
+      # يجب ضبط هذه القيم من لوحة Render (sync: false).
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_DEFAULT_REGION
+        # Cloudflare R2 يستخدم auto، وAWS S3 يحتاج المنطقة الفعلية
+        value: auto
+      - key: AWS_BUCKET
+        sync: false
+      - key: AWS_PUBLIC_BUCKET
+        sync: false
+      - key: AWS_PUBLIC_URL
+        sync: false
+      - key: AWS_ENDPOINT
+        sync: false
+      - key: AWS_USE_PATH_STYLE_ENDPOINT
+        value: "true"
 
       # ---------------- المدير الأول ----------------
       - key: ADMIN_EMAIL
@@ -78,9 +105,9 @@ services:
         sync: false
 
       # خطة Free لا تدعم Pre-Deploy Command، لذلك تُشغَّل الترحيلات عند الإقلاع.
-# (تم تعطيلها مؤقتاً لحين استيراد قاعدة Neon يدوياً).
+      # بعد أول نشر ناجح يمكن جعلها false.
       - key: RUN_MIGRATIONS
-        value: "false"
+        value: "true"
 
       # اجعلها true في أول نشر فقط لإنشاء حساب المدير، ثم أعِدها إلى false.
       - key: RUN_ADMIN_SEEDER
