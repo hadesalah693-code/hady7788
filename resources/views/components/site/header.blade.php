@@ -16,11 +16,11 @@
     </div>
 
     <div class="container-aqari flex h-18 items-center justify-between gap-4">
-        <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-2.5" aria-label="{{ __('app.brand') }}">
-            <img src="{{ asset('images/logo.svg') }}" alt="" class="h-10 w-10 rounded-xl shadow-sm">
+        <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-3" aria-label="{{ __('app.brand') }}">
+            <img src="{{ asset('images/logo.svg') }}" alt="" class="h-12 w-12 rounded-2xl shadow-md ring-1 ring-amber-300/70">
             <span class="leading-tight">
-                <span class="block text-xl font-extrabold text-slate-900">{{ __('app.brand') }}</span>
-                <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Al Emdad</span>
+                <span class="block text-lg font-black text-slate-900 sm:text-xl">{{ __('app.brand') }}</span>
+                <span class="mt-0.5 block text-[9px] font-extrabold uppercase tracking-[0.18em] text-brand-700">AL EMDAD REAL ESTATE</span>
             </span>
         </a>
 
