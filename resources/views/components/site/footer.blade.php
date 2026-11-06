@@ -1,9 +1,9 @@
 <footer id="contact" class="mt-20 bg-slate-950 text-slate-300">
     <div class="container-aqari grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-            <a href="{{ route('home') }}" class="inline-flex items-center gap-2.5">
-                <img src="{{ asset('images/logo.svg') }}" alt="" class="h-10 w-10 rounded-xl">
-                <span class="text-xl font-extrabold text-white">{{ __('app.brand') }}</span>
+            <a href="{{ route('home') }}" class="inline-flex items-center gap-3">
+                <img src="{{ asset('images/logo.svg') }}" alt="" class="h-11 w-11 rounded-2xl ring-1 ring-amber-300/60">
+                <span class="text-xl font-black text-white">{{ __('app.brand') }}</span>
             </a>
             <p class="mt-4 text-sm leading-7 text-slate-400">{{ __('app.footer.about') }}</p>
             <div class="mt-5 flex items-center gap-2 text-xs font-semibold text-brand-300">
