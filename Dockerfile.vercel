@@ -1,0 +1,109 @@
+# syntax=docker/dockerfile:1.7
+
+# ============================================================
+# 1) القاعدة: PHP 8.3 + Apache + كل الإضافات المطلوبة
+# ============================================================
+FROM php:8.3-apache AS base
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+        libwebp-dev \
+        libzip-dev \
+        libicu-dev \
+        libonig-dev \
+        libpq-dev \
+        unzip \
+        ca-certificates \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install -j"$(nproc)" \
+        bcmath \
+        exif \
+        gd \
+        intl \
+        mbstring \
+        opcache \
+        pdo_pgsql \
+        pgsql \
+        zip \
+    && a2enmod rewrite headers expires \
+    && sed -ri 's/^ServerTokens .*/ServerTokens Prod/; s/^ServerSignature .*/ServerSignature Off/' \
+        /etc/apache2/conf-available/security.conf \
+    && a2enconf security \
+    && rm -rf /var/lib/apt/lists/* /tmp/*
+
+WORKDIR /var/www/html
+
+# ============================================================
+# 2) بناء أصول الواجهة (Vite + Tailwind)
+# ============================================================
+FROM node:22-alpine AS assets
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+
+COPY vite.config.js ./
+COPY resources ./resources
+COPY public ./public
+
+RUN npm run build
+
+# ============================================================
+# 3) اعتماديات Composer + نشر أصول Filament
+# ============================================================
+FROM base AS build
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+COPY composer.json composer.lock ./
+RUN composer install \
+        --no-dev \
+        --no-interaction \
+        --no-progress \
+        --prefer-dist \
+        --no-scripts \
+        --no-autoloader
+
+COPY . .
+
+# أصول Vite المبنية في المرحلة السابقة
+COPY --from=assets /app/public/build ./public/build
+
+RUN composer dump-autoload --no-dev --optimize --no-scripts \
+    && php artisan package:discover --ansi \
+    && php artisan filament:assets
+
+# ============================================================
+# 4) صورة التشغيل النهائية
+# ============================================================
+FROM base AS runtime
+
+COPY --from=build /var/www/html /var/www/html
+
+COPY docker/apache-vhost.conf /etc/apache2/sites-available/000-default.conf
+COPY docker/php.ini /usr/local/etc/php/conf.d/zz-app.ini
+COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+
+RUN sed -i 's/\r$//' /usr/local/bin/entrypoint.sh \
+    && chmod +x /usr/local/bin/entrypoint.sh \
+    && mkdir -p \
+        storage/app/private \
+        storage/app/public \
+        storage/app/property-images \
+        storage/framework/cache/data \
+        storage/framework/sessions \
+        storage/framework/views \
+        storage/logs \
+        bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R ug+rwX storage bootstrap/cache
+
+# Vercel يمرر PORT وقت التشغيل — يضبطه entrypoint تلقائيًا
+EXPOSE 80
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
