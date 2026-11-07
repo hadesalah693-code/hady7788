@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PropertyStatus;
 use App\Models\Property;
+use App\Models\PropertyInquiry;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
