@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertyImageController;
+use App\Http\Controllers\PropertyInquiryController;
 use App\Livewire\Account\BrokerDetails;
 use App\Livewire\Account\CompanyDetails;
 use App\Livewire\Account\Dashboard;
@@ -32,6 +33,10 @@ Route::get('/', HomeController::class)->name('home');
 Route::get('/properties', PropertyList::class)->name('properties.index');
 
 Route::get('/properties/{property:slug}', [PropertyController::class, 'show'])->name('properties.show');
+
+Route::post('/properties/{property:slug}/inquiries', [PropertyInquiryController::class, 'store'])
+    ->middleware('throttle:5,1')
+    ->name('properties.inquiries.store');
 
 Route::get('/property-images/{image}', PropertyImageController::class)
     ->whereNumber('image')
