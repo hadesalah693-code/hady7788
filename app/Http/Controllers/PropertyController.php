@@ -17,7 +17,7 @@ class PropertyController extends Controller
             404,
         );
 
-        $property->load(['user', 'images', 'coverImage', 'city', 'district', 'governorate', 'type', 'amenities' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order')->orderBy('name_ar')]);
+        $property->load(['images', 'coverImage', 'city', 'district', 'governorate', 'type', 'amenities' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order')->orderBy('name_ar')]);
         $property->increment('views_count');
 
         $similarProperties = Property::query()
