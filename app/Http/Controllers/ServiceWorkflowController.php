@@ -1,15 +1,15 @@
 <?php
 
-namespace App\\Http\\Controllers;
+namespace App\Http\Controllers;
 
-use App\\Models\\ServiceQuote;
-use App\\Models\\ServiceRequest;
-use App\\Models\\ServiceReview;
-use Illuminate\\Http\\RedirectResponse;
-use Illuminate\\Http\\Request;
-use Illuminate\\Support\\Facades\\DB;
-use Illuminate\\Validation\\ValidationException;
-use Illuminate\\View\\View;
+use App\Models\ServiceQuote;
+use App\Models\ServiceRequest;
+use App\Models\ServiceReview;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 class ServiceWorkflowController
 {
