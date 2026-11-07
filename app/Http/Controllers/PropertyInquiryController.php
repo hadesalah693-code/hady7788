@@ -28,6 +28,11 @@ class PropertyInquiryController extends Controller
             ]);
         }
 
+        $request->merge([
+            'phone' => preg_replace('/[\\s\\-()]/', '', (string) $request->input('phone')),
+            'email' => trim((string) $request->input('email')),
+        ]);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'min:3', 'max:120'],
             'phone' => ['required', 'string', 'regex:/^\+?[0-9]{8,15}$/'],
@@ -50,7 +55,7 @@ class PropertyInquiryController extends Controller
             'phone' => preg_replace('/[\s\-()]/', '', $validated['phone']),
             'email' => filled($validated['email'] ?? null) ? trim($validated['email']) : null,
             'message' => trim($validated['message']),
-            'status' => 'new',
+            'status' => \\App\\Models\\PropertyInquiry::STATUS_NEW,
         ]);
 
         RateLimiter::hit($key, 300);
