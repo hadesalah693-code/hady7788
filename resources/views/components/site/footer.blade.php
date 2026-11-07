@@ -38,20 +38,9 @@
 
         <div>
             <h2 class="text-sm font-bold text-white">{{ __('app.footer.contact') }}</h2>
-            <ul class="mt-4 space-y-3 text-sm">
-                <li class="flex items-center gap-2.5">
-                    <x-heroicon-o-map-pin class="h-4 w-4 text-brand-400" />
-                    <span>{{ __('app.footer.address') }}</span>
-                </li>
-                <li class="flex items-center gap-2.5">
-                    <x-heroicon-o-phone class="h-4 w-4 text-brand-400" />
-                    <a href="tel:+201000000000" class="footer-link" dir="ltr">+20 100 000 0000</a>
-                </li>
-                <li class="flex items-center gap-2.5">
-                    <x-heroicon-o-envelope class="h-4 w-4 text-brand-400" />
-                    <a href="mailto:hello@emdad.test" class="footer-link">{{ __('app.footer.email') }}</a>
-                </li>
-            </ul>
+            <p class="mt-4 text-sm leading-7 text-slate-400">
+                أرسل طلب المعاينة أو الاستفسار من صفحة العقار، وسيتولى فريق الإمداد متابعة طلبك دون كشف بيانات المعلن.
+            </p>       </ul>
         </div>
     </div>
 
