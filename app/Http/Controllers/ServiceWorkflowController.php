@@ -13,6 +13,24 @@ use Illuminate\View\View;
 
 class ServiceWorkflowController
 {
+    public function availableJobs(Request $request): View
+    {
+        $profile = $request->user()->technicianProfile;
+        abort_unless($profile && $profile->verification_status === 'approved' && $profile->availability_status === 'available', 403);
+
+        $jobs = ServiceRequest::query()
+            ->where('status', 'pending')
+            ->whereNull('technician_profile_id')
+            ->whereHas('category', fn ($query) => $query->where('is_active', true))
+            ->whereHas('category.technicianSpecializations', fn ($query) => $query->where('technician_profile_id', $profile->id))
+            ->whereHas('governorate', fn ($query) => $query->whereIn('id', $profile->serviceAreas()->select('governorate_id')))
+            ->with(['category', 'governorate', 'city'])
+            ->latest()
+            ->paginate(15);
+
+        return view('services.requests.jobs', compact('jobs'));
+    }
+
     public function show(Request $request, ServiceRequest $serviceRequest): View
     {
         $this->authorizeRequestAccess($request, $serviceRequest);
@@ -94,6 +112,16 @@ class ServiceWorkflowController
     private function authorizeRequestAccess(Request $request, ServiceRequest $serviceRequest): void
     {
         $user = $request->user();
-        abort_unless($user && ($user->is_admin || $serviceRequest->customer_id === $user->id || $serviceRequest->technician?->user_id === $user->id), 404);
+        $isAssignedTechnician = $serviceRequest->technician?->user_id === $user?->id;
+        $profile = $user?->technicianProfile;
+        $isEligibleTechnician = $profile
+            && $profile->verification_status === 'approved'
+            && $profile->availability_status === 'available'
+            && $serviceRequest->status === 'pending'
+            && $serviceRequest->technician_profile_id === null
+            && $profile->specializations()->where('service_category_id', $serviceRequest->service_category_id)->exists()
+            && $profile->serviceAreas()->where('governorate_id', $serviceRequest->governorate_id)->exists();
+
+        abort_unless($user && ($user->is_admin || $serviceRequest->customer_id === $user->id || $isAssignedTechnician || $isEligibleTechnician), 404);
     }
 }
