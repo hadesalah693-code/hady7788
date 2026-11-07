@@ -59,7 +59,7 @@ class ServiceRequestController
             return $serviceRequest;
         });
 
-        return redirect()->route('account.dashboard')->with('status', 'تم إرسال طلب الصيانة بنجاح، وسنراجع الفنيين المتاحين.');
+        return redirect()->route('services.requests.show', $serviceRequest)->with('status', 'تم إرسال طلب الصيانة بنجاح، وسيتمكن الفنيون المعتمدون في منطقتك من تقديم عروض الأسعار.');
     }
 
     public function applyForm(): View
