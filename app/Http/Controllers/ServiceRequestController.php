@@ -9,7 +9,8 @@ use App\Models\ServiceRequestImage;
 use App\Models\TechnicianProfile;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class ServiceRequestController
@@ -36,20 +37,27 @@ class ServiceRequestController
             'images.*' => ['image', 'mimes:jpg,jpeg,png,webp', 'max:5120'],
         ]);
 
-        $serviceRequest = ServiceRequest::create([
-            ...collect($data)->except('images')->all(),
-            'customer_id' => $request->user()->id,
-            'status' => 'pending',
-        ]);
-
-        foreach ($request->file('images', []) as $image) {
-            $path = $image->store('service-requests/'.$serviceRequest->id, 'local');
-            $serviceRequest->images()->create([
-                'disk' => 'local',
-                'path' => $path,
-                'original_name' => $image->getClientOriginalName(),
+        $serviceRequest = DB::transaction(function () use ($data, $request): ServiceRequest {
+            $serviceRequest = ServiceRequest::create([
+                ...collect($data)->except('images')->all(),
+                'customer_id' => $request->user()->id,
+                'status' => 'pending',
             ]);
-        }
+
+            foreach ($request->file('images', []) as $image) {
+                $path = $image->store('service-requests/'.$serviceRequest->id, 'local');
+                if (! $path) {
+                    throw new \\RuntimeException('Unable to store service request image.');
+                }
+                $serviceRequest->images()->create([
+                    'disk' => 'local',
+                    'path' => $path,
+                    'original_name' => $image->getClientOriginalName(),
+                ]);
+            }
+
+            return $serviceRequest;
+        });
 
         return redirect()->route('account.dashboard')->with('status', 'تم إرسال طلب الصيانة بنجاح، وسنراجع الفنيين المتاحين.');
     }
