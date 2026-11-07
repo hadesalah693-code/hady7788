@@ -20,7 +20,7 @@ class PropertyImageController extends Controller
 
         $isPublic = $property->status === PropertyStatus::Published
             && $property->published_at !== null
-            && $property->published_at->isPast();
+            && $property->published_at->lte(now());
 
         if (! $isPublic) {
             $user = auth()->user();

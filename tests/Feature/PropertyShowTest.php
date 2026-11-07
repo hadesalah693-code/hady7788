@@ -35,6 +35,20 @@ class PropertyShowTest extends TestCase
             ->assertSee('145 م²');
     }
 
+    public function test_public_property_page_never_exposes_the_exact_address(): void
+    {
+        $property = Property::factory()->create([
+            'address' => 'PRIVATE-STREET-ADDRESS-98765',
+            'status' => PropertyStatus::Published,
+            'published_at' => now()->subDay(),
+        ]);
+
+        $this->get(route('properties.show', $property))
+            ->assertOk()
+            ->assertDontSee('PRIVATE-STREET-ADDRESS-98765')
+            ->assertDontSee('streetAddress');
+    }
+
     public function test_property_details_page_increments_views_count(): void
     {
         $property = Property::factory()->create([

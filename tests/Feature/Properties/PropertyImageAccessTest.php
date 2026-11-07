@@ -64,6 +64,22 @@ class PropertyImageAccessTest extends TestCase
             ->assertHeader('Content-Type', 'image/jpeg');
     }
 
+    public function test_other_authenticated_users_cannot_access_images_before_scheduled_publication(): void
+    {
+        $owner = User::factory()->create();
+        $other = User::factory()->create();
+        $property = $this->makeProperty([
+            'user_id' => $owner->id,
+            'status' => PropertyStatus::Published,
+            'published_at' => now()->addDay(),
+        ]);
+        $image = $this->makeImage($property);
+
+        $this->actingAs($other)
+            ->get(route('properties.images.show', $image))
+            ->assertForbidden();
+    }
+
     public function test_guests_cannot_access_images_of_unpublished_properties(): void
     {
         foreach ([

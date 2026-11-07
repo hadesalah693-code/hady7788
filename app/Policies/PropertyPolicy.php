@@ -19,7 +19,11 @@ class PropertyPolicy
             return true;
         }
 
-        if ($property->status === PropertyStatus::Published) {
+        if (
+            $property->status === PropertyStatus::Published
+            && $property->published_at !== null
+            && $property->published_at->lte(now())
+        ) {
             return true;
         }
 

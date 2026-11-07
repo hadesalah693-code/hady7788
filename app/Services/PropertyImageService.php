@@ -36,7 +36,7 @@ class PropertyImageService
         $disk = $this->disk();
         $path = $this->pathFor($property, $processed['extension']);
 
-        Storage::disk($disk)->put($path, $processed['contents']);
+        $this->writeProcessedImage($disk, $path, $processed['contents']);
 
         try {
             return DB::transaction(function () use ($property, $processed, $disk, $path, $alt): PropertyImage {
@@ -83,7 +83,7 @@ class PropertyImageService
         $disk = $this->disk();
         $path = $this->pathFor($property, $processed['extension']);
 
-        Storage::disk($disk)->put($path, $processed['contents']);
+        $this->writeProcessedImage($disk, $path, $processed['contents']);
 
         try {
             /** @var array{image: PropertyImage, old: array{disk: string, path: string}} $result */
@@ -210,6 +210,32 @@ class PropertyImageService
                 }
             }
         });
+    }
+
+    private function writeProcessedImage(string $disk, string $path, string $contents): void
+    {
+        try {
+            $storage = Storage::disk($disk);
+            $written = $storage->put($path, $contents);
+
+            if ($written !== true || ! $storage->exists($path)) {
+                $storage->delete($path);
+
+                throw ValidationException::withMessages([
+                    'photos' => 'تعذر حفظ الصورة في التخزين. حاول مرة أخرى.',
+                ]);
+            }
+        } catch (Throwable $exception) {
+            Storage::disk($disk)->delete($path);
+
+            if ($exception instanceof ValidationException) {
+                throw $exception;
+            }
+
+            throw ValidationException::withMessages([
+                'photos' => 'تعذر حفظ الصورة في التخزين. حاول مرة أخرى.',
+            ]);
+        }
     }
 
     private function lockProperty(Property $property): Property

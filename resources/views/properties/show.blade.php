@@ -2,6 +2,19 @@
     $gallery = $property->images->isNotEmpty() ? $property->images : collect();
     $firstImage = $gallery->first()?->url ?? $property->image_url;
     $publishedDate = $property->published_at?->translatedFormat('j F Y');
+    $currencyLabel = $property->currency_label;
+    $contactPhone = $property->contact_phone ?: $property->user?->phone;
+    $contactWhatsapp = $property->contact_whatsapp ?: $property->user?->whatsapp ?: $contactPhone;
+    $contactEmail = $property->user?->email;
+    $whatsappNumber = preg_replace('/\\D+/', '', (string) $contactWhatsapp);
+
+    // The platform currently serves Egyptian listings; normalize local mobile
+    // numbers for WhatsApp without changing already international numbers.
+    if (str_starts_with($whatsappNumber, '0')) {
+        $whatsappNumber = '20'.substr($whatsappNumber, 1);
+    } elseif (strlen($whatsappNumber) === 10 && str_starts_with($whatsappNumber, '1')) {
+        $whatsappNumber = '20'.$whatsappNumber;
+    }
 @endphp
 
 <x-layouts.app :title="$property->title.' | '.__('app.brand')" :meta-description="\Illuminate\Support\Str::limit($property->description, 155)">
@@ -19,12 +32,11 @@
                     'addressCountry' => 'EG',
                     'addressRegion' => $property->governorate?->name_ar,
                     'addressLocality' => $property->city?->name_ar,
-                    'streetAddress' => $property->address,
                 ],
                 'offers' => [
                     '@type' => 'Offer',
                     'price' => (float) $property->price,
-                    'priceCurrency' => 'EGP',
+                    'priceCurrency' => $property->currency,
                     'availability' => 'https://schema.org/InStock',
                 ],
             ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
@@ -88,7 +100,7 @@
                 <p class="mt-1 text-2xl font-extrabold text-brand-800">
                     {{ $property->price_formatted }}
                     <span class="text-xs font-semibold text-brand-700">
-                        {{ __('app.property.currency') }}{{ $property->price_suffix }}
+                        {{ $currencyLabel }}{{ $property->price_suffix }}
                     </span>
                 </p>
             </div>
@@ -244,12 +256,9 @@
                         </div>
                     </dl>
 
-                    @if ($property->address)
-                        <p class="mt-5 flex items-start gap-2 rounded-xl bg-sand-100 px-4 py-3 text-sm leading-7 text-slate-600">
-                            <x-heroicon-o-map-pin class="mt-1 h-4 w-4 shrink-0 text-brand-600" />
-                            <span>{{ $property->address }}</span>
-                        </p>
-                    @endif
+                    <p class="mt-5 rounded-xl bg-brand-50 px-4 py-3 text-sm leading-7 text-brand-900">
+                        يتم تحديد العنوان التفصيلي وموعد المعاينة بالتنسيق مع فريق الإمداد العقارية.
+                    </p>
                 </div>
             </div>
 
@@ -259,14 +268,33 @@
                     <p class="mt-2 text-sm leading-7 text-slate-500">{{ __('app.property.contact_text') }}</p>
 
                     <div class="mt-5 space-y-3">
-                        <a href="tel:+201000000000" class="btn-primary w-full">
-                            <x-heroicon-o-phone class="h-4 w-4" />
-                            {{ __('app.actions.call') }}
-                        </a>
-                        <a href="mailto:{{ __('app.footer.email') }}?subject={{ urlencode($property->title) }}" class="btn-outline w-full">
-                            <x-heroicon-o-envelope class="h-4 w-4" />
-                            {{ __('app.actions.contact_us') }}
-                        </a>
+                        @if (filled($contactPhone))
+                            <a href="tel:{{ preg_replace('/[^0-9+]/', '', (string) $contactPhone) }}" class="btn-primary w-full">
+                                <x-heroicon-o-phone class="h-4 w-4" />
+                                {{ __('app.actions.call') }}
+                            </a>
+                        @endif
+
+                        @if (filled($whatsappNumber))
+                            <a href="https://wa.me/{{ $whatsappNumber }}?text={{ urlencode('استفسار عن العقار: '.$property->title) }}"
+                               target="_blank" rel="noopener noreferrer" class="btn-outline w-full">
+                                <x-heroicon-o-chat-bubble-left-right class="h-4 w-4" />
+                                {{ __('app.actions.whatsapp') }}
+                            </a>
+                        @endif
+
+                        @if (filled($contactEmail))
+                            <a href="mailto:{{ $contactEmail }}?subject={{ urlencode($property->title) }}" class="btn-outline w-full">
+                                <x-heroicon-o-envelope class="h-4 w-4" />
+                                {{ __('app.actions.contact_us') }}
+                            </a>
+                        @endif
+
+                        @unless (filled($contactPhone) || filled($whatsappNumber) || filled($contactEmail))
+                            <p class="rounded-xl bg-slate-50 px-4 py-3 text-sm leading-7 text-slate-600">
+                                بيانات التواصل غير متاحة لهذا الإعلان حاليًا. تواصل مع فريق الإمداد العقارية للمساعدة.
+                            </p>
+                        @endunless
                     </div>
 
                     <div class="mt-5 flex items-start gap-2 rounded-xl bg-brand-50 px-4 py-3 text-[11px] leading-6 text-brand-900">

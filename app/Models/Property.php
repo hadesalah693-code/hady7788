@@ -49,6 +49,8 @@ use Illuminate\Support\Str;
     'published_at',
     'published_by',
     'views_count',
+    'rejection_reason',
+    'archive_reason',
 ])]
 class Property extends Model
 {
@@ -191,6 +193,17 @@ class Property extends Model
     {
         return Attribute::make(
             get: fn (): string => number_format((float) $this->price, 0, '.', ','),
+        );
+    }
+
+    protected function currencyLabel(): Attribute
+    {
+        return Attribute::make(
+            get: fn (): string => match ($this->currency) {
+                'USD' => 'دولار أمريكي',
+                'EUR' => 'يورو',
+                default => 'ج.م',
+            },
         );
     }
 

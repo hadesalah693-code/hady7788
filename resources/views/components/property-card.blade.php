@@ -68,7 +68,7 @@
             <p class="text-lg font-extrabold text-brand-700">
                 {{ $property->price_formatted }}
                 <span class="text-[11px] font-semibold text-slate-500">
-                    {{ __('app.property.currency') }}{{ $property->price_suffix }}
+                    {{ $property->currency_label }}{{ $property->price_suffix }}
                 </span>
             </p>
 
