@@ -308,7 +308,7 @@
                     <ul class="mt-4 space-y-3 text-sm">
                         <li class="flex items-center justify-between gap-3">
                             <span class="text-slate-500">{{ __('app.property.price') }}</span>
-                            <span class="font-bold text-brand-700">{{ $property->price_formatted }} {{ __('app.property.currency') }}</span>
+                            <span class="font-bold text-brand-700">{{ $property->price_formatted }} {{ $currencyLabel }}</span>
                         </li>
                         <li class="flex items-center justify-between gap-3">
                             <span class="text-slate-500">{{ __('app.property.area') }}</span>
