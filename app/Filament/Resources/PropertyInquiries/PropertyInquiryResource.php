@@ -58,11 +58,6 @@ class PropertyInquiryResource extends Resource
                         ->disabled()
                         ->dehydrated(false),
 
-                    TextInput::make('property.title')
-                        ->label('العقار المطلوب')
-                        ->disabled()
-                        ->dehydrated(false),
-
                     Textarea::make('message')
                         ->label('تفاصيل الاستفسار')
                         ->rows(5)
