@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/account/properties/create', CreateProperty::class)->name('account.properties.create');
     Route::get('/account/properties/{property}', EditProperty::class)->name('account.properties.edit');
 
+    Route::get('/account/home-services/jobs', [ServiceWorkflowController::class, 'availableJobs'])->name('services.jobs.index');
     Route::get('/account/home-services/requests/{serviceRequest}', [ServiceWorkflowController::class, 'show'])->whereNumber('serviceRequest')->name('services.requests.show');
     Route::post('/account/home-services/requests/{serviceRequest}/quotes', [ServiceWorkflowController::class, 'quote'])->whereNumber('serviceRequest')->middleware('throttle:10,1')->name('services.quotes.store');
     Route::post('/account/home-services/requests/{serviceRequest}/quotes/{quote}/accept', [ServiceWorkflowController::class, 'acceptQuote'])->whereNumber('serviceRequest')->whereNumber('quote')->name('services.quotes.accept');
