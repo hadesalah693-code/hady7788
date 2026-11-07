@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - fixes/critical-security-admin
+      - services-module
   pull_request:
     branches:
       - vercel-test
