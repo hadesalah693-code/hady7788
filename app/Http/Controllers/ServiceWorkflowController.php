@@ -71,7 +71,7 @@ class ServiceWorkflowController
             if ($lockedRequest->status !== 'pending' || $lockedRequest->technician_profile_id !== null || $lockedQuote->status !== 'pending' || ($lockedQuote->expires_at && $lockedQuote->expires_at->isPast())) {
                 throw ValidationException::withMessages(['quote' => 'هذا العرض لم يعد متاحًا للقبول.']);
             }
-            ServiceQuote::where('service_request_id', $lockedRequest->id)->whereKeyNot($lockedQuote->id)->where('status', 'pending')->update(['status' => 'rejected']);
+            ServiceQuote::where('service_request_id', $lockedRequest->id)->where('id', '!=', $lockedQuote->id)->where('status', 'pending')->update(['status' => 'rejected']);
             $lockedQuote->update(['status' => 'accepted', 'accepted_at' => now()]);
             $lockedRequest->update(['technician_profile_id' => $lockedQuote->technician_profile_id, 'status' => 'accepted', 'accepted_at' => now()]);
         });
