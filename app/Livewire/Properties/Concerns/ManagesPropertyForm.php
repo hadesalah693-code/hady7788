@@ -96,9 +96,9 @@ trait ManagesPropertyForm
         return $rules;
     }
 
-    private function publicDescriptionAddressRule(): \\Closure
+    private function publicDescriptionAddressRule(): \Closure
     {
-        return function (string $attribute, mixed $value, \\Closure $fail): void {
+        return function (string $attribute, mixed $value, \Closure $fail): void {
             $privateAddress = trim((string) $this->address);
 
             if (
