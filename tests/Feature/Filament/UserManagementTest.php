@@ -116,11 +116,11 @@ class UserManagementTest extends TestCase
 
         $this->actingAs($admin);
 
+        Livewire::test(ListUsers::class)
+            ->assertActionHidden(\\Filament\\Actions\\Testing\\TestAction::make('suspend')->table($admin));
+
         $admin->refresh();
         $this->assertNotSame(AccountStatus::Suspended, $admin->status);
-
-        // The suspend action is not available for the current admin.
-        $this->assertTrue(true);
     }
 
     public function test_verified_status_is_required_for_publishing_after_rejection(): void
