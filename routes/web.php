@@ -6,6 +6,8 @@ use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\PropertyImageController;
 use App\Http\Controllers\PropertyInquiryController;
 use App\Http\Controllers\ServiceRequestController;
+use App\Http\Controllers\ServiceWorkflowController;
+use App\Http\Controllers\ServiceRequestImageController;
 use App\Http\Controllers\ServiceTechnicianController;
 use App\Livewire\Account\BrokerDetails;
 use App\Livewire\Account\CompanyDetails;
