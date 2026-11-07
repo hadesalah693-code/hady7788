@@ -6,6 +6,7 @@ use App\Enums\AccountStatus;
 use App\Enums\VerificationStatus;
 use App\Filament\Resources\Users\Pages\ListUsers;
 use App\Models\User;
+use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -117,7 +118,7 @@ class UserManagementTest extends TestCase
         $this->actingAs($admin);
 
         Livewire::test(ListUsers::class)
-            ->assertActionHidden(\\Filament\\Actions\\Testing\\TestAction::make('suspend')->table($admin));
+            ->assertActionHidden(TestAction::make('suspend')->table($admin));
 
         $admin->refresh();
         $this->assertNotSame(AccountStatus::Suspended, $admin->status);
