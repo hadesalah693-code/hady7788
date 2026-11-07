@@ -14,7 +14,7 @@ class ServiceTechnicianController
         $technicians = TechnicianProfile::query()
             ->approved()
             ->available()
-            ->whereHas('specializations', fn ($query) => $query->where('service_category_id', $request->integer('category')))
+            ->when($request->filled('category'), fn ($query) => $query->whereHas('specializations', fn ($specializations) => $specializations->where('service_category_id', $request->integer('category'))))
             ->with(['user.governorate', 'specializations.category', 'serviceAreas.governorate', 'reviews'])
             ->when($request->filled('governorate'), fn ($query) => $query->whereHas('serviceAreas', fn ($area) => $area->where('governorate_id', $request->integer('governorate'))))
             ->latest()
