@@ -304,9 +304,9 @@
                 </div>
 
                 <div class="flex flex-wrap items-center gap-3">
-                    <a href="mailto:{{ __('app.footer.email') }}" class="btn-accent">
-                        <x-heroicon-o-envelope class="h-4 w-4" />
-                        {{ __('app.actions.contact_us') }}
+                    <a href="{{ route('register') }}" class="btn-accent">
+                        <x-heroicon-o-user-plus class="h-4 w-4" />
+                        {{ __('app.home.cta.button') }}
                     </a>
                     <a href="{{ route('properties.index') }}" class="btn-outline border-white/20! bg-white/10! text-white! hover:bg-white/20!">
                         {{ __('app.actions.browse_properties') }}

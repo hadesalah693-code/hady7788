@@ -102,17 +102,17 @@ class CreatePropertyTest extends TestCase
 
     public function test_unverified_user_cannot_submit_for_review(): void
     {
-        $user = User::factory()->broker()->create(); // pending broker
+        $user = User::factory()->broker()->create();
 
         $this->actingAs($user);
 
-        $component = Livewire::test(CreateProperty::class)
+        Livewire::test(CreateProperty::class)
             ->set('title', 'عقار تجريبي')
             ->set('description', 'وصف تفصيلي للعقار.')
-            ->call('submitForReview');
+            ->call('submitForReview')
+            ->assertForbidden();
 
-        // Gate::authorize throws; Livewire surfaces as exception or 403.
-        $this->assertTrue(true);
+        $this->assertDatabaseMissing('properties', ['title' => 'عقار تجريبي']);
     }
 
     public function test_regular_user_cannot_submit_for_review(): void
@@ -121,14 +121,11 @@ class CreatePropertyTest extends TestCase
 
         $this->actingAs($user);
 
-        try {
-            Livewire::test(CreateProperty::class)
-                ->set('title', 'عقار تجريبي')
-                ->set('description', 'وصف تفصيلي للعقار.')
-                ->call('submitForReview');
-        } catch (\Throwable $e) {
-            // expected
-        }
+        Livewire::test(CreateProperty::class)
+            ->set('title', 'عقار تجريبي')
+            ->set('description', 'وصف تفصيلي للعقار.')
+            ->call('submitForReview')
+            ->assertForbidden();
 
         $this->assertDatabaseMissing('properties', ['title' => 'عقار تجريبي']);
     }

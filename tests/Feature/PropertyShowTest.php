@@ -75,6 +75,17 @@ class PropertyShowTest extends TestCase
         $this->get(route('properties.show', $property))->assertNotFound();
     }
 
+    public function test_scheduled_property_details_are_not_public_before_the_publish_time(): void
+    {
+        $property = Property::factory()->create([
+            'title' => 'TOKEN-SCHEDULED-PROPERTY',
+            'status' => PropertyStatus::Published,
+            'published_at' => now()->addDay(),
+        ]);
+
+        $this->get(route('properties.show', $property))->assertNotFound();
+    }
+
     public function test_property_details_page_returns_not_found_for_unknown_slug(): void
     {
         $this->get('/properties/does-not-exist')->assertNotFound();

@@ -57,7 +57,6 @@ class PropertyList extends Component
                 $query->where(function (Builder $query) use ($term): void {
                     $query->where('title', 'like', $term)
                         ->orWhere('description', 'like', $term)
-                        ->orWhere('address', 'like', $term)
                         ->orWhereHas('city', fn (Builder $query) => $query->where('name_ar', 'like', $term))
                         ->orWhereHas('district', fn (Builder $query) => $query->where('name_ar', 'like', $term))
                         ->orWhereHas('governorate', fn (Builder $query) => $query->where('name_ar', 'like', $term));

@@ -3,18 +3,6 @@
     $firstImage = $gallery->first()?->url ?? $property->image_url;
     $publishedDate = $property->published_at?->translatedFormat('j F Y');
     $currencyLabel = $property->currency_label;
-    $contactPhone = $property->contact_phone ?: $property->user?->phone;
-    $contactWhatsapp = $property->contact_whatsapp ?: $property->user?->whatsapp ?: $contactPhone;
-    $contactEmail = $property->user?->email;
-    $whatsappNumber = preg_replace('/\\D+/', '', (string) $contactWhatsapp);
-
-    // The platform currently serves Egyptian listings; normalize local mobile
-    // numbers for WhatsApp without changing already international numbers.
-    if (str_starts_with($whatsappNumber, '0')) {
-        $whatsappNumber = '20'.substr($whatsappNumber, 1);
-    } elseif (strlen($whatsappNumber) === 10 && str_starts_with($whatsappNumber, '1')) {
-        $whatsappNumber = '20'.$whatsappNumber;
-    }
 @endphp
 
 <x-layouts.app :title="$property->title.' | '.__('app.brand')" :meta-description="\Illuminate\Support\Str::limit($property->description, 155)">
@@ -264,42 +252,67 @@
 
             <aside class="space-y-5 lg:sticky lg:top-24 lg:self-start">
                 <div class="card-surface p-6">
-                    <h2 class="text-base font-extrabold text-slate-900">{{ __('app.property.contact_title') }}</h2>
-                    <p class="mt-2 text-sm leading-7 text-slate-500">{{ __('app.property.contact_text') }}</p>
+                    <h2 class="text-base font-extrabold text-slate-900">اطلب معاينة أو استفسر عن العقار</h2>
+                    <p class="mt-2 text-sm leading-7 text-slate-500">
+                        أرسل طلبك إلى فريق الإمداد. لن تظهر بيانات اتصال المالك، وسيتولى الفريق تنسيق التواصل والمعاينة معك.
+                    </p>
 
-                    <div class="mt-5 space-y-3">
-                        @if (filled($contactPhone))
-                            <a href="tel:{{ preg_replace('/[^0-9+]/', '', (string) $contactPhone) }}" class="btn-primary w-full">
-                                <x-heroicon-o-phone class="h-4 w-4" />
-                                {{ __('app.actions.call') }}
-                            </a>
-                        @endif
+                    @if (session('inquiry_status'))
+                        <p role="status" class="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm font-semibold leading-6 text-emerald-800">
+                            {{ session('inquiry_status') }}
+                        </p>
+                    @endif
 
-                        @if (filled($whatsappNumber))
-                            <a href="https://wa.me/{{ $whatsappNumber }}?text={{ urlencode('استفسار عن العقار: '.$property->title) }}"
-                               target="_blank" rel="noopener noreferrer" class="btn-outline w-full">
-                                <x-heroicon-o-chat-bubble-left-right class="h-4 w-4" />
-                                {{ __('app.actions.whatsapp') }}
-                            </a>
-                        @endif
+                    @php($currentUser = auth()->user())
 
-                        @if (filled($contactEmail))
-                            <a href="mailto:{{ $contactEmail }}?subject={{ urlencode($property->title) }}" class="btn-outline w-full">
-                                <x-heroicon-o-envelope class="h-4 w-4" />
-                                {{ __('app.actions.contact_us') }}
-                            </a>
-                        @endif
+                    <form method="POST" action="{{ route('properties.inquiries.store', $property) }}" class="mt-5 space-y-4">
+                        @csrf
+                        <input type="text" name="website" value="" tabindex="-1" autocomplete="off" aria-hidden="true" class="hidden">
 
-                        @unless (filled($contactPhone) || filled($whatsappNumber) || filled($contactEmail))
-                            <p class="rounded-xl bg-slate-50 px-4 py-3 text-sm leading-7 text-slate-600">
-                                بيانات التواصل غير متاحة لهذا الإعلان حاليًا. تواصل مع فريق الإمداد العقارية للمساعدة.
-                            </p>
-                        @endunless
-                    </div>
+                        <div>
+                            <label for="inquiry-name" class="block text-sm font-bold text-slate-700">الاسم</label>
+                            <input id="inquiry-name" name="name" type="text" required minlength="3" maxlength="120"
+                                   value="{{ old('name', $currentUser?->name) }}"
+                                   autocomplete="name"
+                                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100">
+                            @error('name') <p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
+                            <label for="inquiry-phone" class="block text-sm font-bold text-slate-700">رقم الهاتف</label>
+                            <input id="inquiry-phone" name="phone" type="tel" required maxlength="20"
+                                   value="{{ old('phone', $currentUser?->phone) }}"
+                                   autocomplete="tel" dir="ltr"
+                                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100">
+                            @error('phone') <p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
+                            <label for="inquiry-email" class="block text-sm font-bold text-slate-700">البريد الإلكتروني <span class="font-normal text-slate-400">(اختياري)</span></label>
+                            <input id="inquiry-email" name="email" type="email" maxlength="255"
+                                   value="{{ old('email', $currentUser?->email) }}"
+                                   autocomplete="email"
+                                   class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100">
+                            @error('email') <p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
+                            <label for="inquiry-message" class="block text-sm font-bold text-slate-700">تفاصيل الطلب</label>
+                            <textarea id="inquiry-message" name="message" rows="4" required minlength="10" maxlength="2000"
+                                      placeholder="مثال: أرغب في تحديد موعد لمعاينة العقار..."
+                                      class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-900 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100">{{ old('message') }}</textarea>
+                            @error('message') <p class="mt-1 text-xs font-semibold text-rose-600">{{ $message }}</p> @enderror
+                        </div>
+
+                        <button type="submit" class="btn-primary w-full">
+                            <x-heroicon-o-calendar-days class="h-4 w-4" />
+                            إرسال طلب المعاينة
+                        </button>
+                    </form>
 
                     <div class="mt-5 flex items-start gap-2 rounded-xl bg-brand-50 px-4 py-3 text-[11px] leading-6 text-brand-900">
                         <x-heroicon-o-shield-check class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
-                        <span>لا تدفع أي مبالغ قبل معاينة العقار والتحقق من الأوراق الرسمية.</span>
+                        <span>بياناتك تصل إلى فريق الإمداد لمتابعة الطلب، ولا نعرض بيانات المالك مباشرة على الزوار.</span>
                     </div>
                 </div>
 
@@ -308,7 +321,7 @@
                     <ul class="mt-4 space-y-3 text-sm">
                         <li class="flex items-center justify-between gap-3">
                             <span class="text-slate-500">{{ __('app.property.price') }}</span>
-                            <span class="font-bold text-brand-700">{{ $property->price_formatted }} {{ __('app.property.currency') }}</span>
+                            <span class="font-bold text-brand-700">{{ $property->price_formatted }} {{ $currencyLabel }}</span>
                         </li>
                         <li class="flex items-center justify-between gap-3">
                             <span class="text-slate-500">{{ __('app.property.area') }}</span>

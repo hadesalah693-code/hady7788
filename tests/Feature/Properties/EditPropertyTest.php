@@ -86,6 +86,26 @@ class EditPropertyTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_public_description_cannot_repeat_the_private_exact_address(): void
+    {
+        $user = User::factory()->create();
+        $property = $this->makeProperty($user, [
+            'address' => 'PRIVATE-ADDRESS-UNIT-9988',
+        ]);
+
+        $this->actingAs($user);
+
+        Livewire::test(EditProperty::class, ['property' => $property->id])
+            ->set('description', 'العقار يقع في PRIVATE-ADDRESS-UNIT-9988')
+            ->call('save')
+            ->assertHasErrors(['description']);
+
+        $this->assertSame(
+            'وصف تفصيلي كافٍ للعقار يتجاوز الحد الأدنى.',
+            $property->refresh()->description,
+        );
+    }
+
     public function test_owner_can_update_editable_fields_without_touching_admin_fields(): void
     {
         $user = User::factory()->create();

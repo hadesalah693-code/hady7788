@@ -99,6 +99,20 @@ class PropertyListingTest extends TestCase
             ->assertDontSee($other->title);
     }
 
+    public function test_listing_search_does_not_match_a_private_exact_address(): void
+    {
+        $property = Property::factory()->create([
+            'title' => 'TOKEN-PRIVATE-ADDRESS-LISTING',
+            'address' => 'PRIVATE-ADDRESS-TOKEN-12345',
+            'status' => PropertyStatus::Published,
+            'published_at' => now()->subDay(),
+        ]);
+
+        $this->get(route('properties.index', ['q' => 'PRIVATE-ADDRESS-TOKEN-12345']))
+            ->assertOk()
+            ->assertDontSee($property->title);
+    }
+
     public function test_listing_page_filters_properties_by_type(): void
     {
         $apartment = PropertyType::factory()->create(['name_ar' => 'شقة', 'slug' => 'apartment-test']);

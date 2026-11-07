@@ -79,7 +79,10 @@ trait ManagesPropertyForm
      */
     protected function draftRules(): array
     {
-        return PropertyFormRules::draft($this->governorate_id, $this->city_id);
+        $rules = PropertyFormRules::draft($this->governorate_id, $this->city_id);
+        $rules['description'][] = $this->publicDescriptionAddressRule();
+
+        return $rules;
     }
 
     /**
@@ -87,7 +90,25 @@ trait ManagesPropertyForm
      */
     protected function submitRules(): array
     {
-        return PropertyFormRules::submission($this->governorate_id, $this->city_id);
+        $rules = PropertyFormRules::submission($this->governorate_id, $this->city_id);
+        $rules['description'][] = $this->publicDescriptionAddressRule();
+
+        return $rules;
+    }
+
+    private function publicDescriptionAddressRule(): \Closure
+    {
+        return function (string $attribute, mixed $value, \Closure $fail): void {
+            $privateAddress = trim((string) $this->address);
+
+            if (
+                $privateAddress !== ''
+                && mb_strlen($privateAddress) >= 5
+                && mb_stripos((string) $value, $privateAddress) !== false
+            ) {
+                $fail('لا تضع العنوان التفصيلي في الوصف؛ سيظهر الوصف للعامة بينما يظل العنوان محفوظًا للمنصة فقط.');
+            }
+        };
     }
 
     protected function fillFromProperty(Property $property): void

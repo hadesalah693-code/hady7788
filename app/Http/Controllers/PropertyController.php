@@ -11,11 +11,13 @@ class PropertyController extends Controller
     public function show(Property $property): View
     {
         abort_unless(
-            $property->status === PropertyStatus::Published && $property->published_at?->isPast(),
+            $property->status === PropertyStatus::Published
+            && $property->published_at !== null
+            && $property->published_at->lte(now()),
             404,
         );
 
-        $property->load(['user', 'images', 'coverImage', 'city', 'district', 'governorate', 'type', 'amenities' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order')->orderBy('name_ar')]);
+        $property->load(['images', 'coverImage', 'city', 'district', 'governorate', 'type', 'amenities' => fn ($query) => $query->where('is_active', true)->orderBy('sort_order')->orderBy('name_ar')]);
         $property->increment('views_count');
 
         $similarProperties = Property::query()

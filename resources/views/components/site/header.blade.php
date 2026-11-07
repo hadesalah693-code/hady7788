@@ -2,16 +2,7 @@
     <div class="hidden bg-brand-950 text-brand-50 sm:block">
         <div class="container-aqari flex h-9 items-center justify-between text-[11px] font-medium">
             <p>الإمداد العقارية — منصة مصرية ببيانات واضحة وصور حقيقية</p>
-            <div class="flex items-center gap-5">
-                <a href="tel:+201000000000" class="flex items-center gap-1.5 transition hover:text-white">
-                    <x-heroicon-o-phone class="h-3.5 w-3.5" />
-                    <span dir="ltr">+20 100 000 0000</span>
-                </a>
-                <a href="mailto:hello@emdad.test" class="flex items-center gap-1.5 transition hover:text-white">
-                    <x-heroicon-o-envelope class="h-3.5 w-3.5" />
-                    <span>hello@emdad.test</span>
-                </a>
-            </div>
+            <p>لطلب المعاينة، أرسل استفسارك من صفحة العقار وسيتابع فريق الإمداد طلبك.</p>      </div>
         </div>
     </div>
 
