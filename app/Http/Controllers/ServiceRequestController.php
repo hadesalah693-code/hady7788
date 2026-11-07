@@ -27,7 +27,7 @@ class ServiceRequestController
         $data = $request->validate([
             'service_category_id' => ['required', 'exists:service_categories,id'],
             'governorate_id' => ['required', 'exists:governorates,id'],
-            'city_id' => ['nullable', 'exists:cities,id'],
+            'city_id' => ['nullable', Rule::exists('cities', 'id')->where(fn ($query) => $query->where('governorate_id', $request->integer('governorate_id')))],
             'title' => ['required', 'string', 'max:180'],
             'description' => ['required', 'string', 'min:15', 'max:5000'],
             'private_address' => ['required', 'string', 'min:8', 'max:1000'],
