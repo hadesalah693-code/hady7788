@@ -80,6 +80,17 @@ class PropertyImageAccessTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_guests_cannot_access_images_before_scheduled_publication(): void
+    {
+        $property = $this->makeProperty([
+            'status' => PropertyStatus::Published,
+            'published_at' => now()->addDay(),
+        ]);
+        $image = $this->makeImage($property);
+
+        $this->get(route('properties.images.show', $image))->assertNotFound();
+    }
+
     public function test_guests_cannot_access_images_of_unpublished_properties(): void
     {
         foreach ([
