@@ -135,6 +135,11 @@ class Property extends Model
         return $this->hasOne(PropertyImage::class)->where('is_cover', true)->orderBy('sort_order');
     }
 
+    public function inquiries(): HasMany
+    {
+        return $this->hasMany(PropertyInquiry::class);
+    }
+
     public function amenities(): BelongsToMany
     {
         return $this->belongsToMany(Amenity::class, 'property_amenity');
