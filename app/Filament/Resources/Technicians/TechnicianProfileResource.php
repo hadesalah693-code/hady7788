@@ -42,6 +42,15 @@ class TechnicianProfileResource extends Resource
                 Select::make('availability_status')->label('التوفر')->options(['available'=>'متاح','busy'=>'مشغول','suspended'=>'موقوف'])->required(),
                 Textarea::make('bio')->label('نبذة')->rows(4)->columnSpanFull(),
                 Textarea::make('approval_notes')->label('ملاحظات الإدارة')->rows(3)->columnSpanFull(),
+                Repeater::make('specializations')->label('تخصصات الفني')->relationship()->schema([
+                    Select::make('service_category_id')->label('التخصص')->options(fn () => \\App\\Models\\ServiceCategory::active()->orderBy('name_ar')->pluck('name_ar', 'id'))->searchable()->required(),
+                    TextInput::make('starting_price')->label('سعر يبدأ من')->numeric()->minValue(0),
+                    Select::make('accepts_quotes')->label('استقبال عروض الأسعار')->options([1 => 'نعم', 0 => 'لا'])->default(1)->required(),
+                ])->columns(2)->defaultItems(0)->columnSpanFull(),
+                Repeater::make('serviceAreas')->label('مناطق عمل الفني')->relationship()->schema([
+                    Select::make('governorate_id')->label('المحافظة')->options(fn () => \\App\\Models\\Governorate::where('is_active', true)->orderBy('name_ar')->pluck('name_ar', 'id'))->searchable()->required(),
+                    Select::make('city_id')->label('المدينة (اختياري)')->options(fn () => \\App\\Models\\City::where('is_active', true)->orderBy('name_ar')->pluck('name_ar', 'id'))->searchable(),
+                ])->columns(2)->defaultItems(0)->columnSpanFull(),
             ]),
         ]);
     }
