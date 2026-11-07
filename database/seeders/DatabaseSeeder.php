@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             LocationSeeder::class,
             PropertyTypeSeeder::class,
             AmenitySeeder::class,
+            ServiceCategorySeeder::class,
             AdminUserSeeder::class,
             DemoPropertySeeder::class,
         ]);
