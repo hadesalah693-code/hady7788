@@ -11,7 +11,9 @@ class PropertyController extends Controller
     public function show(Property $property): View
     {
         abort_unless(
-            $property->status === PropertyStatus::Published && $property->published_at?->isPast(),
+            $property->status === PropertyStatus::Published
+            && $property->published_at !== null
+            && $property->published_at->lte(now()),
             404,
         );
 
