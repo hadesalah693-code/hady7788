@@ -45,6 +45,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/account/properties/create', CreateProperty::class)->name('account.properties.create');
     Route::get('/account/properties/{property}', EditProperty::class)->name('account.properties.edit');
 
+    Route::get('/account/home-services/requests/{serviceRequest}', [ServiceWorkflowController::class, 'show'])->whereNumber('serviceRequest')->name('services.requests.show');
+    Route::post('/account/home-services/requests/{serviceRequest}/quotes', [ServiceWorkflowController::class, 'quote'])->whereNumber('serviceRequest')->middleware('throttle:10,1')->name('services.quotes.store');
+    Route::post('/account/home-services/requests/{serviceRequest}/quotes/{quote}/accept', [ServiceWorkflowController::class, 'acceptQuote'])->whereNumber('serviceRequest')->whereNumber('quote')->name('services.quotes.accept');
+    Route::post('/account/home-services/requests/{serviceRequest}/schedule', [ServiceWorkflowController::class, 'schedule'])->whereNumber('serviceRequest')->name('services.requests.schedule');
+    Route::post('/account/home-services/requests/{serviceRequest}/complete', [ServiceWorkflowController::class, 'complete'])->whereNumber('serviceRequest')->name('services.requests.complete');
+    Route::post('/account/home-services/requests/{serviceRequest}/review', [ServiceWorkflowController::class, 'review'])->whereNumber('serviceRequest')->name('services.reviews.store');
+    Route::get('/account/home-services/images/{image}', ServiceRequestImageController::class)->whereNumber('image')->name('services.images.show');
+
     Route::get('/account/home-services/apply', [ServiceRequestController::class, 'applyForm'])->name('services.apply');
     Route::post('/account/home-services/apply', [ServiceRequestController::class, 'apply'])->middleware('throttle:3,1')->name('services.apply.store');
     Route::get('/account/home-services/requests/create', [ServiceRequestController::class, 'create'])->name('services.requests.create');
