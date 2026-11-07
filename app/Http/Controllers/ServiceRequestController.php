@@ -47,7 +47,7 @@ class ServiceRequestController
             foreach ($request->file('images', []) as $image) {
                 $path = $image->store('service-requests/'.$serviceRequest->id, 'local');
                 if (! $path) {
-                    throw new \\RuntimeException('Unable to store service request image.');
+                    throw new \RuntimeException('Unable to store service request image.');
                 }
                 $serviceRequest->images()->create([
                     'disk' => 'local',
