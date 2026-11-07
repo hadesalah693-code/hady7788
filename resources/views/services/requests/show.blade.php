@@ -6,7 +6,11 @@
         <p><strong>الحالة:</strong> {{ $serviceRequest->status }}</p>
         <p class="mt-2"><strong>الخدمة:</strong> {{ $serviceRequest->category->name_ar }}</p>
         <p class="mt-2"><strong>الوصف:</strong> {{ $serviceRequest->description }}</p>
-        <p class="mt-2"><strong>العنوان الخاص:</strong> {{ $serviceRequest->private_address }}</p>
+        @if(auth()->user()->is_admin || auth()->id() === $serviceRequest->customer_id || $serviceRequest->technician?->user_id === auth()->id())
+            <p class="mt-2"><strong>العنوان الخاص:</strong> {{ $serviceRequest->private_address }}</p>
+        @else
+            <p class="mt-2 rounded-lg bg-amber-50 p-3 text-amber-800">العنوان التفصيلي سيظهر بعد قبول عرض السعر.</p>
+        @endif
         @if($serviceRequest->scheduled_at)<p class="mt-2"><strong>الموعد:</strong> {{ $serviceRequest->scheduled_at->format('Y-m-d H:i') }}</p>@endif
         <div class="mt-4 flex flex-wrap gap-3">@foreach($serviceRequest->images as $image)<a class="text-amber-700 underline" href="{{ route('services.images.show', $image) }}" target="_blank" rel="noopener">عرض صورة الطلب</a>@endforeach</div>
     </div>
