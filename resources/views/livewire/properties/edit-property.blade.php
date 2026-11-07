@@ -111,6 +111,7 @@
 
                 <div class="sm:col-span-2">
                     <label class="mb-1.5 block text-xs font-bold text-slate-600">الوصف</label>
+                    <p class="mb-2 text-xs leading-6 text-slate-500">هذا الوصف سيظهر للزوار. اذكر مميزات العقار والمنطقة العامة فقط، ولا تكتب اسم الشارع أو رقم المبنى أو الشقة.</p>
                     <textarea wire:model="description" rows="5" class="input-field resize-y"></textarea>
                     @error('description') <p class="mt-1.5 text-xs font-semibold text-rose-600">{{ $message }}</p> @enderror
                 </div>
