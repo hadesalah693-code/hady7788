@@ -6,6 +6,8 @@ use App\Models\Governorate;
 use App\Models\ServiceCategory;
 use App\Models\ServiceProvider;
 use Illuminate\Contracts\View\View;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Schema;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
@@ -42,15 +44,33 @@ class ServiceCatalog extends Component
 
     public function render(): View
     {
+        $governorates = Governorate::query()
+            ->where('is_active', true)
+            ->orderBy('name_ar')
+            ->get();
+
+        $serviceTables = [
+            'service_categories',
+            'service_providers',
+            'service_provider_categories',
+            'service_provider_images',
+        ];
+
+        if (collect($serviceTables)->contains(fn (string $table): bool => ! Schema::hasTable($table))) {
+            return view('livewire.services.service-catalog', [
+                'categories' => collect(),
+                'governorates' => $governorates,
+                'providers' => new LengthAwarePaginator([], 0, 9, 1, ['path' => request()->url()]),
+                'activeCategory' => null,
+                'providersCount' => 0,
+                'completedCount' => 0,
+            ]);
+        }
+
         $categories = ServiceCategory::query()
             ->active()
             ->ordered()
             ->withCount(['providers' => fn ($query) => $query->available()])
-            ->get();
-
-        $governorates = Governorate::query()
-            ->where('is_active', true)
-            ->orderBy('name_ar')
             ->get();
 
         $providers = ServiceProvider::query()
