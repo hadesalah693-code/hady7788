@@ -36,12 +36,12 @@ class DashboardTest extends TestCase
 
     public function test_it_shows_the_authenticated_account_information(): void
     {
-        $user = User::factory()->company()->create(['name' => 'شركة الإمداد للتطوير']);
+        $user = User::factory()->company()->create(['name' => 'شركة الإمداد']);
 
         $this->actingAs($user);
 
         Livewire::test(Dashboard::class)
-            ->assertSee('شركة الإمداد للتطوير')
+            ->assertSee('شركة الإمداد')
             ->assertSee($user->email)
             ->assertSee($user->account_type->label())
             ->assertSee(__('app.account.dashboard.stats.properties'));

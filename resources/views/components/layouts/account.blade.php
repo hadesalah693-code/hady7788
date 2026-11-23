@@ -10,6 +10,8 @@
     <title>{{ $title ?? __('app.account.title').' | '.__('app.brand') }}</title>
     <meta name="description" content="{{ __('app.account.subtitle') }}">
     <meta name="theme-color" content="#0f766e">
+    <meta name="application-name" content="{{ __('app.brand') }}">
+    <meta name="apple-mobile-web-app-title" content="{{ __('app.brand') }}">
     <meta name="robots" content="noindex, nofollow">
 
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">

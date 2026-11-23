@@ -23,7 +23,7 @@ class AdminUserSeeder extends Seeder
         User::updateOrCreate(
             ['email' => $email],
             [
-                'name' => 'مدير الإمداد العقارية',
+                'name' => 'مدير الإمداد',
                 'password' => $password,
                 'is_admin' => true,
                 'account_type' => AccountType::User,

@@ -101,7 +101,7 @@ class RegistrationTest extends TestCase
             ->set($this->payload([
                 'email' => 'company@example.com',
                 'account_type' => AccountType::Company->value,
-                'company_name' => 'شركة الإمداد للعقارات',
+                'company_name' => 'شركة الإمداد',
             ]))
             ->call('register')
             ->assertHasNoErrors()
@@ -115,7 +115,7 @@ class RegistrationTest extends TestCase
         $this->assertFalse($company->isAdmin());
         $this->assertFalse(Gate::forUser($company)->allows('publish-properties'));
         $this->assertNotNull($company->companyProfile);
-        $this->assertSame('شركة الإمداد للعقارات', $company->companyProfile->company_name);
+        $this->assertSame('شركة الإمداد', $company->companyProfile->company_name);
         $this->assertSame(VerificationStatus::Pending, $company->companyProfile->verification_status);
     }
 

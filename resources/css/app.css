@@ -42,27 +42,39 @@
 @theme {
     --font-sans: 'Cairo', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
 
-    --color-brand-50: #f0fdfa;
-    --color-brand-100: #ccfbf1;
-    --color-brand-200: #99f6e4;
-    --color-brand-300: #5eead4;
-    --color-brand-400: #2dd4bf;
-    --color-brand-500: #14b8a6;
-    --color-brand-600: #0d9488;
-    --color-brand-700: #0f766e;
-    --color-brand-800: #115e59;
-    --color-brand-900: #134e4a;
-    --color-brand-950: #042f2e;
+    /* Deep emerald brand — trustworthy, premium, international */
+    --color-brand-50: #eefbf6;
+    --color-brand-100: #d6f5ea;
+    --color-brand-200: #aeead6;
+    --color-brand-300: #79d8bd;
+    --color-brand-400: #43bf9f;
+    --color-brand-500: #1ea586;
+    --color-brand-600: #10866e;
+    --color-brand-700: #0d6b59;
+    --color-brand-800: #0d5548;
+    --color-brand-900: #0c463c;
+    --color-brand-950: #04261f;
 
-    --color-sand-50: #faf9f6;
-    --color-sand-100: #f5f2ea;
-    --color-sand-200: #eae4d6;
-    --color-sand-300: #d9cfba;
+    /* Warm neutral canvas */
+    --color-sand-50: #fbfaf7;
+    --color-sand-100: #f4f1ea;
+    --color-sand-200: #e8e2d5;
+    --color-sand-300: #d6ccb8;
 
-    --shadow-soft: 0 18px 45px -24px rgb(15 23 42 / 0.35);
-    --shadow-card: 0 10px 30px -18px rgb(15 23 42 / 0.28);
+    /* Signature gold accent */
+    --color-gold-300: #f8d98a;
+    --color-gold-400: #f2c15c;
+    --color-gold-500: #e0a326;
+    --color-gold-600: #c0871a;
+
+    --shadow-soft: 0 26px 60px -34px rgb(4 38 31 / 0.45);
+    --shadow-card: 0 16px 40px -28px rgb(4 38 31 / 0.4);
+    --shadow-lift: 0 34px 80px -34px rgb(4 38 31 / 0.5);
+    --shadow-glow: 0 0 0 1px rgb(255 255 255 / 0.08), 0 24px 70px -30px rgb(30 165 134 / 0.55);
 
     --animate-fade-up: fade-up 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+    --animate-fade-in: fade-in 0.5s ease-out both;
+    --animate-float: float 7s ease-in-out infinite;
 
     @keyframes fade-up {
         from {
@@ -74,6 +86,25 @@
             transform: translateY(0);
         }
     }
+
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes float {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-14px);
+        }
+    }
 }
 
 @layer base {
@@ -83,11 +114,13 @@
 
     html {
         scroll-behavior: smooth;
+        -webkit-text-size-adjust: 100%;
     }
 
     body {
-        @apply bg-sand-50 text-slate-800 antialiased;
+        @apply bg-sand-50 text-slate-700 antialiased;
         font-family: var(--font-sans);
+        font-feature-settings: 'kern', 'liga';
     }
 
     ::selection {
@@ -102,7 +135,18 @@
     h2,
     h3,
     h4 {
-        @apply text-balance font-bold text-slate-900;
+        @apply text-balance font-extrabold text-slate-900;
+        letter-spacing: -0.015em;
+    }
+
+    img {
+        @apply max-w-full;
+    }
+
+    /* Refined, low-contrast scrollbar */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-sand-300) transparent;
     }
 }
 
@@ -111,60 +155,121 @@
         @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
     }
 
+    /* ---------- Buttons ---------- */
     .btn {
-        @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition duration-200 disabled:cursor-not-allowed disabled:opacity-60;
+        @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold transition duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-60;
     }
 
     .btn-primary {
-        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-700 px-5 py-3 text-sm font-bold text-white shadow-sm transition duration-200 hover:bg-brand-800 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60;
+        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-brand-700 px-5 py-3 text-sm font-bold text-white shadow-[0_14px_30px_-18px_rgba(13,107,89,0.9)] transition duration-200 ease-out hover:bg-brand-800 hover:shadow-[0_18px_38px_-18px_rgba(13,107,89,0.95)] active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60;
     }
 
     .btn-accent {
-        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-amber-500 px-5 py-3 text-sm font-bold text-white shadow-sm transition duration-200 hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60;
+        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-gold-500 px-5 py-3 text-sm font-bold text-brand-950 shadow-[0_14px_30px_-18px_rgba(224,163,38,0.9)] transition duration-200 ease-out hover:bg-gold-400 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60;
     }
 
     .btn-outline {
-        @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition duration-200 hover:border-brand-600 hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-60;
+        @apply inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 shadow-[0_2px_6px_-4px_rgba(4,38,31,0.3)] transition duration-200 ease-out hover:border-brand-300 hover:bg-brand-50/40 hover:text-brand-700 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60;
     }
 
     .btn-ghost {
-        @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-slate-600 transition duration-200 hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-60;
+        @apply inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-slate-600 transition duration-200 ease-out hover:bg-slate-100 hover:text-slate-900 disabled:cursor-not-allowed disabled:opacity-60;
     }
 
+    .btn-dark {
+        @apply inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-bold text-white transition duration-200 ease-out hover:bg-slate-800 active:translate-y-px;
+    }
+
+    /* ---------- Forms ---------- */
     .input-field {
-        @apply w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 shadow-sm transition placeholder:text-slate-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 focus:outline-none;
+        @apply w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-800 shadow-[0_1px_2px_0_rgba(4,38,31,0.04)] transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-100/70 focus:outline-none;
     }
 
     .select-field {
-        @apply w-full appearance-none rounded-xl border border-slate-300 bg-white bg-[length:1rem_1rem] bg-[left_0.9rem_center] bg-no-repeat py-3 pe-9 ps-4 text-sm text-slate-800 shadow-sm transition focus:border-brand-600 focus:ring-2 focus:ring-brand-100 focus:outline-none;
+        @apply w-full appearance-none rounded-xl border border-slate-200 bg-white bg-[length:1rem_1rem] bg-[left_0.9rem_center] bg-no-repeat py-3 pe-9 ps-4 text-sm text-slate-800 shadow-[0_1px_2px_0_rgba(4,38,31,0.04)] transition focus:border-brand-500 focus:ring-4 focus:ring-brand-100/70 focus:outline-none;
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='m19 9-7 7-7-7'/%3E%3C/svg%3E");
     }
 
-    .card-surface {
-        @apply rounded-2xl border border-slate-200/80 bg-white shadow-card;
+    .field-label {
+        @apply mb-1.5 block text-xs font-bold text-slate-600;
     }
 
+    /* ---------- Surfaces ---------- */
+    .card-surface {
+        @apply rounded-2xl border border-slate-200/70 bg-white shadow-card;
+    }
+
+    .card-flat {
+        @apply rounded-2xl border border-slate-200/70 bg-white;
+    }
+
+    .card-glass {
+        @apply rounded-2xl border border-white/15 bg-white/10 backdrop-blur-xl;
+    }
+
+    .section-shell {
+        @apply rounded-3xl border border-slate-200/70 bg-white;
+    }
+
+    /* ---------- Typography ---------- */
     .section-eyebrow {
-        @apply mb-3 inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-bold text-brand-700;
+        @apply mb-3 inline-flex items-center gap-2 rounded-full bg-brand-50 px-3.5 py-1.5 text-[11px] font-extrabold tracking-wide text-brand-700 ring-1 ring-brand-100;
     }
 
     .section-title {
-        @apply text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl;
+        @apply text-2xl font-extrabold tracking-tight text-slate-900 sm:text-[2rem] sm:leading-[1.15];
     }
 
     .section-subtitle {
-        @apply mt-2 max-w-2xl text-sm leading-7 text-slate-500 sm:text-base;
+        @apply mt-2.5 max-w-2xl text-sm leading-7 text-slate-500 sm:text-[15px];
+    }
+
+    .eyebrow-light {
+        @apply inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-[11px] font-bold text-brand-100 ring-1 ring-white/15 backdrop-blur;
     }
 
     .badge {
         @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold;
     }
 
+    .chip {
+        @apply inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 transition hover:border-brand-300 hover:text-brand-700;
+    }
+
+    .link-arrow {
+        @apply inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 transition hover:gap-2.5 hover:text-brand-800;
+    }
+
+    /* ---------- Navigation ---------- */
     .nav-link {
-        @apply rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition hover:bg-brand-50 hover:text-brand-700;
+        @apply rounded-lg px-3 py-2 text-sm font-semibold text-slate-600 transition duration-150 hover:bg-brand-50 hover:text-brand-700;
+    }
+
+    .nav-link-active {
+        @apply bg-brand-50 text-brand-700;
     }
 
     .footer-link {
-        @apply text-sm text-slate-400 transition hover:text-white;
+        @apply text-sm text-slate-400 transition duration-150 hover:text-white;
+    }
+
+    /* ---------- Misc ---------- */
+    .stat-tile {
+        @apply flex items-center gap-3.5 rounded-2xl border border-slate-200/70 bg-white px-5 py-4;
+    }
+
+    .icon-tile {
+        @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-700;
+    }
+
+    .divider-soft {
+        @apply border-slate-100;
+    }
+
+    .hero-grid {
+        background-image:
+            linear-gradient(rgb(255 255 255 / 0.045) 1px, transparent 1px),
+            linear-gradient(90deg, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+        background-size: 56px 56px;
     }
 }

@@ -132,11 +132,16 @@ class AccountAccessTest extends TestCase
 
             $parameters = $route->parameterNames();
 
-            // The property edit route accepts only the property primary key;
-            // it never accepts a user identifier and ownership is enforced by
-            // PropertyPolicy inside the component.
-            if ($name === 'account.properties.edit') {
-                $this->assertSame(['property'], $parameters);
+            // Resource routes may accept the resource primary key, but never a
+            // user identifier. Ownership is enforced by the matching policy
+            // inside the component.
+            $resourceParameters = [
+                'account.properties.edit' => ['property'],
+                'account.service-requests.show' => ['serviceRequest'],
+            ];
+
+            if (array_key_exists($name, $resourceParameters)) {
+                $this->assertSame($resourceParameters[$name], $parameters);
 
                 continue;
             }
@@ -144,6 +149,6 @@ class AccountAccessTest extends TestCase
             $this->assertSame([], $parameters, "Route {$name} must not accept identifiers.");
         }
 
-        $this->assertSame(8, $checked);
+        $this->assertSame(12, $checked);
     }
 }

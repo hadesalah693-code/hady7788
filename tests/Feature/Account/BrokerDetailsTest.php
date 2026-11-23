@@ -135,7 +135,7 @@ class BrokerDetailsTest extends TestCase
     public function test_company_affiliation_is_shown_as_read_only_data(): void
     {
         $company = User::factory()->verifiedCompany()->create();
-        $company->companyProfile->update(['company_name' => 'شركة الإمداد العقارية']);
+        $company->companyProfile->update(['company_name' => 'شركة الإمداد']);
 
         $broker = User::factory()->verifiedBroker()->create();
         $broker->brokerProfile->update(['company_id' => $company->companyProfile->id]);
@@ -144,7 +144,7 @@ class BrokerDetailsTest extends TestCase
 
         $this->get(route('account.broker'))
             ->assertOk()
-            ->assertSee('شركة الإمداد العقارية')
+            ->assertSee('شركة الإمداد')
             ->assertSee(__('app.account.broker.company'));
 
         Livewire::test(BrokerDetails::class)

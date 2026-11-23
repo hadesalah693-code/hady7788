@@ -1,4 +1,4 @@
-# الإمداد العقارية — منصة عقارية مصرية
+# الإمداد — منصة عقارية مصرية
 
 منصة عقارية عربية (RTL) لعرض العقارات في مصر، مبنية على Laravel + Livewire + Filament + PostgreSQL.
 
@@ -61,7 +61,7 @@ php artisan key:generate
 عدّل `.env` بما يناسب بيئتك:
 
 ```dotenv
-APP_NAME="الإمداد العقارية"
+APP_NAME="الإمداد"
 APP_URL=http://127.0.0.1:8000
 APP_LOCALE=ar
 APP_TIMEZONE=Africa/Cairo

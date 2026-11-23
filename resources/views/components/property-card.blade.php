@@ -1,43 +1,51 @@
 @props(['property'])
 
-<article {{ $attributes }} class="group card-surface flex flex-col overflow-hidden transition duration-300 hover:-translate-y-1 hover:shadow-soft">
+<article {{ $attributes }} class="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/70 bg-white shadow-card transition duration-300 hover:-translate-y-1.5 hover:border-brand-200 hover:shadow-lift">
     <a href="{{ route('properties.show', $property) }}" class="relative block aspect-[4/3] overflow-hidden bg-slate-100">
         <img src="{{ $property->image_url }}"
              alt="{{ $property->title }}"
              loading="lazy"
-             class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
+             class="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.06]">
+
+        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/55 via-slate-950/0 to-slate-950/10" aria-hidden="true"></div>
 
         <div class="absolute inset-x-3 top-3 flex flex-wrap items-center justify-between gap-2">
-            <span class="badge {{ $property->purpose->badgeClasses() }}">
+            <span class="badge {{ $property->purpose->badgeClasses() }} shadow-sm backdrop-blur">
                 {{ $property->purpose_label }}
             </span>
 
             <span class="flex items-center gap-1.5">
                 @if ($property->is_featured)
-                    <span class="badge bg-amber-400 text-amber-950">
+                    <span class="badge bg-gold-400 text-brand-950 shadow-sm">
                         <x-heroicon-s-star class="h-3 w-3" />
                         {{ __('app.property.featured') }}
                     </span>
                 @endif
 
                 @if ($property->is_new)
-                    <span class="badge bg-white/95 text-brand-800">
+                    <span class="badge bg-white/95 text-brand-800 shadow-sm backdrop-blur">
                         {{ __('app.property.new') }}
                     </span>
                 @endif
             </span>
         </div>
 
-        <span class="absolute inset-x-3 bottom-3 inline-flex w-fit items-center gap-1.5 rounded-lg bg-slate-950/65 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
-            <x-heroicon-o-map-pin class="h-3.5 w-3.5" />
+        <span class="absolute inset-x-3 bottom-3 inline-flex w-fit items-center gap-1.5 rounded-lg bg-slate-950/55 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
+            <x-heroicon-o-map-pin class="h-3.5 w-3.5 text-gold-300" />
             {{ $property->location_label ?: $property->governorate?->name_ar }}
         </span>
     </a>
 
     <div class="flex flex-1 flex-col p-5">
-        <p class="text-[11px] font-bold text-brand-700">{{ $property->type?->name_ar }}</p>
+        <div class="flex items-center justify-between gap-2">
+            <p class="inline-flex items-center gap-1.5 text-[11px] font-extrabold uppercase tracking-wide text-brand-700">
+                <span class="h-1 w-1 rounded-full bg-brand-500"></span>
+                {{ $property->type?->name_ar }}
+            </p>
+            <span class="text-[11px] font-semibold text-slate-400">إعلان موثّق</span>
+        </div>
 
-        <h3 class="mt-1.5 text-base font-bold leading-7 text-slate-900">
+        <h3 class="mt-1.5 line-clamp-2 text-[15px] font-extrabold leading-6 text-slate-900">
             <a href="{{ route('properties.show', $property) }}" class="transition hover:text-brand-700">
                 {{ $property->title }}
             </a>
@@ -65,16 +73,19 @@
         </div>
 
         <div class="mt-auto flex items-end justify-between gap-3 border-t border-slate-100 pt-4">
-            <p class="text-lg font-extrabold text-brand-700">
-                {{ $property->price_formatted }}
-                <span class="text-[11px] font-semibold text-slate-500">
-                    {{ __('app.property.currency') }}{{ $property->price_suffix }}
-                </span>
-            </p>
+            <div>
+                <p class="text-[10px] font-bold uppercase tracking-wide text-slate-400">{{ __('app.property.price') }}</p>
+                <p class="mt-0.5 text-lg font-extrabold text-brand-700">
+                    {{ $property->price_formatted }}
+                    <span class="text-[11px] font-semibold text-slate-500">
+                        {{ __('app.property.currency') }}{{ $property->price_suffix }}
+                    </span>
+                </p>
+            </div>
 
             <a href="{{ route('properties.show', $property) }}"
-               class="inline-flex items-center gap-1 text-xs font-bold text-slate-600 transition hover:text-brand-700">
-                {{ __('app.actions.details') }}
+               class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition duration-200 group-hover:border-brand-600 group-hover:bg-brand-700 group-hover:text-white"
+               aria-label="{{ __('app.actions.details') }}">
                 <x-heroicon-o-arrow-left class="h-4 w-4" />
             </a>
         </div>

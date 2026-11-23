@@ -10,6 +10,8 @@
     <title>{{ $title ?? __('app.brand').' | '.__('app.tagline') }}</title>
     <meta name="description" content="{{ $metaDescription ?? __('app.description') }}">
     <meta name="theme-color" content="#0f766e">
+    <meta name="application-name" content="{{ __('app.brand') }}">
+    <meta name="apple-mobile-web-app-title" content="{{ __('app.brand') }}">
 
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="{{ __('app.brand') }}">

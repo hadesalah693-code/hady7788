@@ -5,7 +5,7 @@
                 <img src="{{ asset('images/logo.svg') }}" alt="" class="h-11 w-11 rounded-xl shadow-sm">
                 <span class="leading-tight">
                     <span class="block text-xl font-extrabold text-slate-900">{{ __('app.brand') }}</span>
-                    <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Al Emdad</span>
+                    <span class="block text-[10px] font-semibold tracking-wider text-slate-400">{{ __('app.tagline') }}</span>
                 </span>
             </a>
 
@@ -136,7 +136,7 @@
                                type="text"
                                wire:model="company_name"
                                class="input-field"
-                               placeholder="شركة الإمداد للعقارات">
+                               placeholder="شركة الإمداد">
                         <p class="mt-1.5 text-[11px] leading-5 text-slate-400">{{ __('app.auth.company_name_hint') }}</p>
                         @error('company_name')
                             <p class="mt-1.5 text-xs font-semibold text-rose-600">{{ $message }}</p>

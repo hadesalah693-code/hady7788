@@ -16,6 +16,8 @@
         ['route' => 'account.profile', 'label' => __('app.account.nav.profile'), 'icon' => 'heroicon-o-user-circle'],
         ['route' => 'account.security', 'label' => __('app.account.nav.security'), 'icon' => 'heroicon-o-lock-closed'],
         ['route' => 'account.properties.index', 'label' => 'عقاراتي', 'icon' => 'heroicon-o-home-modern', 'match' => 'account.properties.*'],
+        ['route' => 'account.service-requests.index', 'label' => __('app.services.my_requests.title'), 'icon' => 'heroicon-o-clipboard-document-list', 'match' => 'account.service-requests.*'],
+        ['route' => 'account.service-provider', 'label' => __('app.services.provider.title'), 'icon' => 'heroicon-o-wrench-screwdriver', 'match' => 'account.service-provider*'],
     ];
 
     if ($user->isCompany()) {

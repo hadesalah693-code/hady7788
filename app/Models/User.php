@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\AccountStatus;
 use App\Enums\AccountType;
+use App\Enums\ServiceProviderStatus;
 use App\Enums\VerificationStatus;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
@@ -149,5 +150,30 @@ class User extends Authenticatable implements FilamentUser
     public function properties(): HasMany
     {
         return $this->hasMany(Property::class);
+    }
+
+    public function serviceProvider(): HasOne
+    {
+        return $this->hasOne(ServiceProvider::class);
+    }
+
+    public function serviceRequests(): HasMany
+    {
+        return $this->hasMany(ServiceRequest::class);
+    }
+
+    public function serviceReviews(): HasMany
+    {
+        return $this->hasMany(ServiceReview::class);
+    }
+
+    public function isServiceProvider(): bool
+    {
+        return $this->serviceProvider()->exists();
+    }
+
+    public function serviceProviderStatus(): ?ServiceProviderStatus
+    {
+        return $this->serviceProvider?->status;
     }
 }

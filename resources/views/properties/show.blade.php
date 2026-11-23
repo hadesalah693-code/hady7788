@@ -83,7 +83,7 @@
                 </p>
             </div>
 
-            <div class="shrink-0 rounded-2xl border border-brand-100 bg-brand-50 px-5 py-4 text-start lg:text-end">
+            <div class="shrink-0 rounded-2xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white px-5 py-4 text-start shadow-card lg:text-end">
                 <p class="text-[11px] font-bold text-brand-700">{{ __('app.property.price') }}</p>
                 <p class="mt-1 text-2xl font-extrabold text-brand-800">
                     {{ $property->price_formatted }}
@@ -91,29 +91,35 @@
                         {{ __('app.property.currency') }}{{ $property->price_suffix }}
                     </span>
                 </p>
+                <p class="mt-1.5 inline-flex items-center gap-1 text-[10px] font-semibold text-slate-500">
+                    <x-heroicon-o-check-badge class="h-3.5 w-3.5 text-brand-600" />
+                    سعر معروض من المالك
+                </p>
             </div>
         </div>
 
         <div class="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div class="min-w-0 space-y-8">
-                <div x-data="{ active: @js($firstImage) }" class="card-surface overflow-hidden">
-                    <div class="relative aspect-[16/10] bg-slate-100">
+                <div x-data="{ active: @js($firstImage) }" class="overflow-hidden rounded-3xl border border-slate-200/70 bg-white shadow-soft">
+                    <div class="relative aspect-[16/10] bg-slate-100 sm:aspect-[16/9]">
                         <img :src="active" src="{{ $firstImage }}" alt="{{ $property->title }}"
                              class="h-full w-full object-cover">
+                        <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/30 via-transparent to-transparent" aria-hidden="true"></div>
 
                         @if ($gallery->count() > 1)
-                            <span class="absolute bottom-3 end-3 rounded-lg bg-slate-950/70 px-2.5 py-1 text-[11px] font-bold text-white">
+                            <span class="absolute bottom-4 end-4 inline-flex items-center gap-1.5 rounded-xl bg-slate-950/60 px-3 py-1.5 text-[11px] font-bold text-white backdrop-blur">
+                                <x-heroicon-o-photo class="h-3.5 w-3.5" />
                                 {{ $gallery->count() }} صور
                             </span>
                         @endif
                     </div>
 
                     @if ($gallery->count() > 1)
-                        <div class="flex gap-3 overflow-x-auto p-3">
+                        <div class="flex gap-2.5 overflow-x-auto p-3">
                             @foreach ($gallery as $image)
                                 <button type="button"
                                         x-on:click="active = @js($image->url)"
-                                        class="h-16 w-24 shrink-0 overflow-hidden rounded-lg border-2 border-transparent transition hover:border-brand-400 focus-visible:border-brand-600"
+                                        class="h-16 w-24 shrink-0 overflow-hidden rounded-xl border-2 border-transparent opacity-80 transition hover:border-brand-400 hover:opacity-100 focus-visible:border-brand-600"
                                         aria-label="عرض الصورة {{ $loop->iteration }}">
                                     <img src="{{ $image->url }}" alt="{{ $image->alt ?? $property->title }}"
                                          loading="lazy" class="h-full w-full object-cover">
@@ -254,8 +260,21 @@
             </div>
 
             <aside class="space-y-5 lg:sticky lg:top-24 lg:self-start">
-                <div class="card-surface p-6">
-                    <h2 class="text-base font-extrabold text-slate-900">{{ __('app.property.contact_title') }}</h2>
+                <div class="card-surface overflow-hidden p-6">
+                    <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-700 text-white">
+                            <x-heroicon-o-building-office-2 class="h-5 w-5" />
+                        </span>
+                        <div>
+                            <p class="text-sm font-extrabold text-slate-900">{{ __('app.brand') }}</p>
+                            <p class="flex items-center gap-1 text-[11px] font-semibold text-emerald-600">
+                                <x-heroicon-s-check-badge class="h-3.5 w-3.5" />
+                                وسيط موثّق
+                            </p>
+                        </div>
+                    </div>
+
+                    <h2 class="mt-4 text-base font-extrabold text-slate-900">{{ __('app.property.contact_title') }}</h2>
                     <p class="mt-2 text-sm leading-7 text-slate-500">{{ __('app.property.contact_text') }}</p>
 
                     <div class="mt-5 space-y-3">

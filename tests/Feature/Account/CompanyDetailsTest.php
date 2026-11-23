@@ -25,7 +25,7 @@ class CompanyDetailsTest extends TestCase
 
         Livewire::test(CompanyDetails::class)
             ->assertSet('company_name', $profile->company_name)
-            ->set('company_name', 'شركة الإمداد للتطوير العقاري')
+            ->set('company_name', 'شركة الإمداد')
             ->set('commercial_register', 'CR-999999')
             ->set('tax_id', '999-999-999')
             ->set('website', 'https://emdad.test')
@@ -37,7 +37,7 @@ class CompanyDetailsTest extends TestCase
 
         $profile->refresh();
 
-        $this->assertSame('شركة الإمداد للتطوير العقاري', $profile->company_name);
+        $this->assertSame('شركة الإمداد', $profile->company_name);
         $this->assertSame('CR-999999', $profile->commercial_register);
         $this->assertSame('999-999-999', $profile->tax_id);
         $this->assertSame('https://emdad.test', $profile->website);

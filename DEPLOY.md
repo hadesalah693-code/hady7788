@@ -1,6 +1,6 @@
 # دليل النشر على Render (Docker + Neon + S3-Compatible)
 
-هذا الدليل يشرح نشر منصة «الإمداد العقارية» على Render باستخدام Docker، مع قاعدة بيانات Neon وتخزين صور على S3-Compatible (Cloudflare R2 / AWS S3 / Backblaze B2).
+هذا الدليل يشرح نشر منصة «الإمداد» على Render باستخدام Docker، مع قاعدة بيانات Neon وتخزين صور على S3-Compatible (Cloudflare R2 / AWS S3 / Backblaze B2).
 
 > **قبل البدء:** لا تنفّذ `git push` أو أي تغيير في DNS أو أي خدمة مدفوعة دون أمر صريح.
 
@@ -130,7 +130,7 @@ php artisan media:sync-to-s3
 
 | المتغير | القيمة |
 |---|---|
-| `APP_NAME` | `الإمداد العقارية` |
+| `APP_NAME` | `الإمداد` |
 | `APP_ENV` | `production` |
 | `APP_DEBUG` | `false` |
 | `APP_URL` | لا تضبطها؛ يُشتق تلقائيًا من `RENDER_EXTERNAL_URL` (اضبطها فقط عند استخدام دومين مخصص) |

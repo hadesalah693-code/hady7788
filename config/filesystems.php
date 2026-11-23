@@ -95,6 +95,30 @@ return [
             'report' => false,
         ],
 
+        /*
+         * Private disk for service request photos. Files are only reachable
+         * through the guarded ServiceRequestImageController route.
+         */
+        'service-images' => env('SERVICE_IMAGE_DRIVER', 'local') === 's3' ? [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ] : [
+            'driver' => 'local',
+            'root' => storage_path('app/service-images'),
+            'serve' => false,
+            'visibility' => 'private',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

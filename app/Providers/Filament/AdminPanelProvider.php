@@ -28,7 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login()
-            ->brandName('الإمداد العقارية')
+            ->brandName('الإمداد')
             ->colors([
                 'primary' => Color::Teal,
             ])

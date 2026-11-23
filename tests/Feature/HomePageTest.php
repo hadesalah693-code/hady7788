@@ -16,7 +16,8 @@ class HomePageTest extends TestCase
         $this->get('/')
             ->assertOk()
             ->assertSee('dir="rtl"', false)
-            ->assertSee('الإمداد العقارية')
+            ->assertSee('الإمداد')
+            ->assertDontSee('الإمداد العقارية')
             ->assertSee('ابحث عن بيتك القادم');
     }
 

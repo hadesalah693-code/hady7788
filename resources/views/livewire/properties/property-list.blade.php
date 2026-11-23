@@ -2,7 +2,9 @@
     <section class="relative overflow-hidden bg-brand-950 py-12 text-white sm:py-16">
         <div class="absolute inset-0 opacity-25"
              style="background-image: url('{{ asset('images/hero-city.svg') }}'); background-size: cover; background-position: center;"></div>
-        <div class="absolute inset-0 bg-gradient-to-l from-brand-950 via-brand-950/85 to-brand-900/70"></div>
+        <div class="absolute inset-0 bg-gradient-to-l from-brand-950 via-brand-950/90 to-brand-900/70"></div>
+        <div class="hero-grid absolute inset-0 opacity-60" aria-hidden="true"></div>
+        <div class="absolute -start-20 top-0 h-64 w-64 rounded-full bg-brand-500/20 blur-3xl" aria-hidden="true"></div>
 
         <div class="container-aqari relative">
             <nav aria-label="مسار التنقل" class="flex items-center gap-2 text-xs font-semibold text-brand-200">
@@ -13,12 +15,16 @@
 
             <div class="mt-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
                 <div>
-                    <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">{{ __('app.listing.title') }}</h1>
-                    <p class="mt-2 max-w-2xl text-sm leading-7 text-brand-100">{{ __('app.listing.subtitle') }}</p>
+                    <span class="eyebrow-light mt-4">
+                        <x-heroicon-o-home-modern class="h-3.5 w-3.5 text-gold-300" />
+                        {{ number_format($properties->total()) }} عقار متاح الآن
+                    </span>
+                    <h1 class="mt-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">{{ __('app.listing.title') }}</h1>
+                    <p class="mt-2 max-w-2xl text-sm leading-7 text-brand-100/90">{{ __('app.listing.subtitle') }}</p>
                 </div>
 
-                <p class="inline-flex w-fit items-center gap-2 rounded-xl bg-white/10 px-4 py-2 text-sm font-bold text-white ring-1 ring-white/15">
-                    <x-heroicon-o-home-modern class="h-4 w-4 text-amber-300" />
+                <p class="inline-flex w-fit items-center gap-2 rounded-xl border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold text-white backdrop-blur">
+                    <x-heroicon-o-check-badge class="h-4 w-4 text-gold-300" />
                     {{ __('app.listing.results', ['count' => number_format($properties->total())]) }}
                 </p>
             </div>
@@ -113,7 +119,7 @@
                         <div class="rounded-xl bg-brand-50 p-4">
                             <p class="flex items-start gap-2 text-[11px] leading-6 text-brand-900">
                                 <x-heroicon-o-information-circle class="mt-0.5 h-4 w-4 shrink-0 text-brand-600" />
-                                <span>كل العقارات المعروضة هنا مراجعة من فريق الإمداد العقارية. تواصل معنا إذا احتجت مساعدة في الاختيار.</span>
+                                <span>كل العقارات المعروضة هنا مراجعة من فريق الإمداد. تواصل معنا إذا احتجت مساعدة في الاختيار.</span>
                             </p>
                         </div>
                     </div>
@@ -121,7 +127,7 @@
             </aside>
 
             <div class="min-w-0">
-                <div class="mb-5 flex flex-col gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                <div class="mb-5 flex flex-col gap-3 rounded-2xl border border-slate-200/70 bg-white px-4 py-3 shadow-card sm:flex-row sm:items-center sm:justify-between">
                     <p class="text-xs font-semibold text-slate-500">
                         {{ __('app.listing.results', ['count' => number_format($properties->total())]) }}
                     </p>
